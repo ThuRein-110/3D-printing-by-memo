@@ -13,6 +13,7 @@ import {generationApi} from './generation-api';
 import {errorCode} from './error-code';
 import {csrf} from './csrf';
 import {catalogPublic,catalogAdmin,selectedCatalog} from './catalog-api';
+import {adminOrderContext} from './order-context';
 import type {Row} from './generated';
 import type { Database } from './generated';
 import type { Json } from '@mfu/types';
@@ -242,7 +243,15 @@ export async function handle(req:Request,path:string[],adminApp=false):Promise<R
   const quoteId=path[0]==='quotes'?id:String((data as Row<'orders'>).quote_id);
   const {data:modelSnapshot}=await db.from('model_order_snapshots').select('metadata').eq('quote_id',quoteId).maybeSingle();
   let finance:unknown=null;
-  if(adminApp){const {data:q}=await svc.from('quotes').select('estimate,snapshot,configuration,final_total').eq('id',quoteId).single();const {data:review}=await db.from('quote_cost_reviews').select('review').eq('quote_id',quoteId).maybeSingle();finance={quote:q,verified:review?.review??null};}
+  if(adminApp){
+   const [quotation,review]=await Promise.all([
+    svc.from('quotes').select('owner_id,estimate,snapshot,configuration,final_total').eq('id',quoteId).single(),
+    db.from('quote_cost_reviews').select('review').eq('quote_id',quoteId).maybeSingle()
+   ]);check(quotation.error);check(review.error);
+   const q=quotation.data;if(!q)throw new Error('Quote not found');
+   const selection=z.object({materialId:z.uuid().nullable().optional()}).parse(q.configuration);
+   finance={quote:q,verified:review.data?.review??null,...await adminOrderContext(svc,q.owner_id,selection.materialId??null)};
+  }
   const {data:events}=path[0]==='orders'?await db.from('order_events').select('*').eq('order_id',id).order('created_at'): {data:null};return json({data:!adminApp&&path[0]==='quotes'?customerQuote(data as Row<'quotes'>):data,events,modelSnapshot:modelSnapshot?.metadata??null,finance});
  }
  return json({error:'Not found'},404);
