@@ -11,6 +11,7 @@ import { readLimited } from './limits';
 import {customerQuote,customerJob,customerEstimate} from './customer-data';
 import {generationApi} from './generation-api';
 import {errorCode} from './error-code';
+import {csrf} from './csrf';
 import type {Row} from './generated';
 import type { Database } from './generated';
 import type { Json } from '@mfu/types';
@@ -20,7 +21,6 @@ function check(error:{message:string}|null){if(error)throw new Error('Database o
 const toJson=(value:unknown):Json=>JSON.parse(JSON.stringify(value));
 const isEnabled=(value:unknown)=>z.object({enabled:z.boolean().optional()}).safeParse(value).data?.enabled===true;
 async function body(req:Request) {return JSON.parse(new TextDecoder().decode(await readLimited(req,32000))) as unknown;}
-function csrf(req:Request){const expected=process.env.APP_ORIGIN;if(!expected||req.headers.get('origin')!==new URL(expected).origin)throw new Error('Origin rejected');}
 async function rate(key:string,limit:number,seconds=3600){const {data,error}=await serviceClient().rpc('take_rate_limit',{p_key:key,p_limit:limit,p_seconds:seconds});check(error);if(data!==true)throw new Error('Rate limit exceeded');}
 const adminTables=['orders','quotes','customers','customer_files','materials','filament_spools','pricing_rules','promotions','preview_jobs','gallery_items','production_jobs','audit_logs','payments','settings','inventory_transactions','inventory_reservations','privacy_requests'] as const;
 const publicTables=['materials','gallery_items','promotions'] as const;
@@ -37,7 +37,7 @@ export async function handle(req:Request,path:string[],adminApp=false):Promise<R
  try {
  const route=path.join('/');
  if(route==='health'){if(!configured())return json({backend:false,writes:false,provider:false});const db=await session();const {error}=await db.from('materials').select('id').limit(1);return json({backend:!error,writes:!!process.env.SUPABASE_SERVICE_ROLE_KEY,provider:process.env.PREVIEW_PROVIDER==='meshy'},error?503:200);}
- if(req.method!=='GET')csrf(req);
+ if(req.method!=='GET')csrf(req,adminApp);
  if(!configured())return json({error:'Supabase is not configured. No data has been saved.'},503);
  if(path[0]==='public'&&path[1]==='material-image'&&req.method==='GET'){
   const id=z.uuid().parse(path[2]),svc=serviceClient();const {data:material}=await svc.from('materials').select('image_file_id').eq('id',id).eq('visible',true).gt('available_grams',0).single();if(!material?.image_file_id)return json({error:'Not found'},404);
