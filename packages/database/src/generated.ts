@@ -29,6 +29,113 @@ audit_logs: {Row:{
  after_data?: Json | null;
  created_at?: string;
 };Relationships:[]};
+catalog_assets: {Row:{
+ id: string;
+ uploader_id: string;
+ path: string;
+ filename: string;
+ mime: string;
+ kind: string;
+ bytes: number;
+ analysis: Json | null;
+ created_at: string;
+};Insert:{
+ id?: string;
+ uploader_id: string;
+ path: string;
+ filename: string;
+ mime: string;
+ kind: string;
+ bytes: number;
+ analysis?: Json | null;
+ created_at?: string;
+};Update:{
+ id?: string;
+ uploader_id?: string;
+ path?: string;
+ filename?: string;
+ mime?: string;
+ kind?: string;
+ bytes?: number;
+ analysis?: Json | null;
+ created_at?: string;
+};Relationships:[]};
+catalog_models: {Row:{
+ id: string;
+ name: string;
+ description: string;
+ source_kind: string;
+ source_url: string;
+ creator: string;
+ creator_url: string;
+ category: string;
+ tags: string[];
+ license_name: string;
+ license_url: string;
+ commercial_allowed: boolean;
+ license_approved: boolean;
+ preview_allowed: boolean;
+ printability: string;
+ visible: boolean;
+ available: boolean;
+ mesh_asset_id: string | null;
+ image_asset_id: string | null;
+ starting_price: number | null;
+ lead_time_days: number | null;
+ search_document: string | null;
+ created_at: string;
+ updated_at: string;
+};Insert:{
+ id?: string;
+ name: string;
+ description?: string;
+ source_kind: string;
+ source_url?: string;
+ creator: string;
+ creator_url?: string;
+ category: string;
+ tags?: string[];
+ license_name: string;
+ license_url?: string;
+ commercial_allowed?: boolean;
+ license_approved?: boolean;
+ preview_allowed?: boolean;
+ printability?: string;
+ visible?: boolean;
+ available?: boolean;
+ mesh_asset_id?: string | null;
+ image_asset_id?: string | null;
+ starting_price?: number | null;
+ lead_time_days?: number | null;
+ search_document?: string | null;
+ created_at?: string;
+ updated_at?: string;
+};Update:{
+ id?: string;
+ name?: string;
+ description?: string;
+ source_kind?: string;
+ source_url?: string;
+ creator?: string;
+ creator_url?: string;
+ category?: string;
+ tags?: string[];
+ license_name?: string;
+ license_url?: string;
+ commercial_allowed?: boolean;
+ license_approved?: boolean;
+ preview_allowed?: boolean;
+ printability?: string;
+ visible?: boolean;
+ available?: boolean;
+ mesh_asset_id?: string | null;
+ image_asset_id?: string | null;
+ starting_price?: number | null;
+ lead_time_days?: number | null;
+ search_document?: string | null;
+ created_at?: string;
+ updated_at?: string;
+};Relationships:[]};
 customer_files: {Row:{
  id: string;
  owner_id: string;
@@ -273,6 +380,53 @@ materials: {Row:{
  reserved_grams?: number;
  image_file_id?: string | null;
 };Relationships:[]};
+model_license_reviews: {Row:{
+ id: string;
+ model_id: string;
+ reviewer_id: string;
+ commercial_allowed: boolean;
+ approved: boolean;
+ note: string;
+ record: Json;
+ created_at: string;
+};Insert:{
+ id?: string;
+ model_id: string;
+ reviewer_id: string;
+ commercial_allowed: boolean;
+ approved: boolean;
+ note: string;
+ record: Json;
+ created_at?: string;
+};Update:{
+ id?: string;
+ model_id?: string;
+ reviewer_id?: string;
+ commercial_allowed?: boolean;
+ approved?: boolean;
+ note?: string;
+ record?: Json;
+ created_at?: string;
+};Relationships:[]};
+model_order_snapshots: {Row:{
+ quote_id: string;
+ owner_id: string;
+ model_id: string;
+ metadata: Json;
+ created_at: string;
+};Insert:{
+ quote_id: string;
+ owner_id: string;
+ model_id: string;
+ metadata: Json;
+ created_at?: string;
+};Update:{
+ quote_id?: string;
+ owner_id?: string;
+ model_id?: string;
+ metadata?: Json;
+ created_at?: string;
+};Relationships:[]};
 model_versions: {Row:{
  id: string;
  owner_id: string;
@@ -370,6 +524,7 @@ orders: {Row:{
  final_design_file_id: string | null;
  final_design_approved: boolean;
  created_at: string;
+ final_catalog_asset_id: string | null;
 };Insert:{
  id?: string;
  number?: number;
@@ -379,6 +534,7 @@ orders: {Row:{
  final_design_file_id?: string | null;
  final_design_approved?: boolean;
  created_at?: string;
+ final_catalog_asset_id?: string | null;
 };Update:{
  id?: string;
  number?: number;
@@ -388,6 +544,7 @@ orders: {Row:{
  final_design_file_id?: string | null;
  final_design_approved?: boolean;
  created_at?: string;
+ final_catalog_asset_id?: string | null;
 };Relationships:[]};
 payments: {Row:{
  id: string;
@@ -495,6 +652,7 @@ pricing_rules: {Row:{
  created_at: string;
  material_id: string | null;
  service: string | null;
+ reviewed: boolean;
 };Insert:{
  id?: string;
  rates: Json;
@@ -503,6 +661,7 @@ pricing_rules: {Row:{
  created_at?: string;
  material_id?: string | null;
  service?: string | null;
+ reviewed?: boolean;
 };Update:{
  id?: string;
  rates?: Json;
@@ -511,6 +670,7 @@ pricing_rules: {Row:{
  created_at?: string;
  material_id?: string | null;
  service?: string | null;
+ reviewed?: boolean;
 };Relationships:[]};
 pricing_snapshots: {Row:{
  id: string;
@@ -650,6 +810,8 @@ promotions: {Row:{
  active: boolean;
  minimum_total: number;
  created_at: string;
+ allow_below_cost: boolean;
+ authorization_note: string;
 };Insert:{
  id?: string;
  name: string;
@@ -662,6 +824,8 @@ promotions: {Row:{
  active?: boolean;
  minimum_total?: number;
  created_at?: string;
+ allow_below_cost?: boolean;
+ authorization_note?: string;
 };Update:{
  id?: string;
  name?: string;
@@ -674,6 +838,8 @@ promotions: {Row:{
  active?: boolean;
  minimum_total?: number;
  created_at?: string;
+ allow_below_cost?: boolean;
+ authorization_note?: string;
 };Relationships:[]};
 provider_budgets: {Row:{
  day: string;
@@ -700,6 +866,22 @@ provider_reservations: {Row:{
  job_id?: string;
  budget_day?: string;
  amount?: number;
+};Relationships:[]};
+quote_cost_reviews: {Row:{
+ quote_id: string;
+ reviewer_id: string;
+ review: Json;
+ created_at: string;
+};Insert:{
+ quote_id: string;
+ reviewer_id: string;
+ review: Json;
+ created_at?: string;
+};Update:{
+ quote_id?: string;
+ reviewer_id?: string;
+ review?: Json;
+ created_at?: string;
 };Relationships:[]};
 quote_items: {Row:{
  id: string;
@@ -811,7 +993,7 @@ reserve_promotion:{Args:{p_promo:string;p_quote:string};Returns:boolean};
 claim_preview_job:{Args:Record<string,never>;Returns:Database['public']['Tables']['preview_jobs']['Row'][]};
 reserve_provider_budget:{Args:{p_job:string};Returns:boolean};
 commit_quote:{Args:{p_record:Json;p_promo?:string|null;p_regular?:Json|null};Returns:string};
-issue_final_quote:{Args:{p_id:string;p_total:number;p_notes:string;p_design:string};Returns:undefined};
+issue_final_quote:{Args:{p_id:string;p_total:number;p_notes:string;p_design:string|null};Returns:undefined};
 reserve_inventory:{Args:{p_order:string;p_material:string;p_grams:number};Returns:undefined};
 settle_inventory:{Args:{p_reservation:string;p_consume:boolean};Returns:undefined};
 operations_metrics:{Args:Record<string,never>;Returns:Json};
@@ -820,5 +1002,7 @@ enqueue_generation:{Args:{p_owner:string;p_file:string;p_request:string};Returns
 start_generation:{Args:{p_job:string};Returns:boolean};
 retry_generation:{Args:{p_id:string};Returns:undefined};
 generation_metrics:{Args:Record<string,never>;Returns:Json};
+save_catalog_model:{Args:{p_id:string;p_values:Json};Returns:string};
+catalog_categories:{Args:Record<string,never>;Returns:Json};
 };Enums:{order_status:OrderStatus};CompositeTypes:Record<string,never>}};
 export type Row<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Row'];

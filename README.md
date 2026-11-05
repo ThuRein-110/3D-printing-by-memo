@@ -15,7 +15,7 @@ Copy-Item .env.example admin/.env.local
 pnpm dev
 ```
 
-Customer: localhost port 3000. Admin: port 3001. Without backend credentials, marketing pages render and writes fail explicitly; no fake records or successful conversions are produced. Confirm email before signing in. Existing deployed databases need only reviewed pending migration 009; never reset or reseed them. Seed defaults have zero stock until real inventory is recorded. Provider generation remains disabled until monthly controls, credentials and the separate worker are configured.
+Customer: localhost port 3000. Admin: port 3001. Without backend credentials, marketing pages render and writes fail explicitly; no fake records or successful conversions are produced. Confirm email before signing in. Existing deployed databases need reviewed pending migrations 009 and 010; never reset or reseed them. Seed defaults have zero stock until real inventory is recorded. Provider generation remains disabled until monthly controls, credentials and the separate worker are configured.
 
 ```powershell
 pnpm lint
@@ -42,3 +42,5 @@ The PostgreSQL integration suite executes all migrations and RLS on embedded Pos
 - [Security](docs/security.md), [Vercel deployment](docs/vercel-deployment.md), [operations](docs/operations.md), [limitations](docs/limitations.md)
 
 Existing production URLs: **not supplied or verified in this checkout**. See [production upgrade](docs/production-upgrade.md) for exact environment names, Meshy/worker setup, read-only connectivity diagnostics, monthly cost controls and rollout gates. No live conversion or Vercel redeployment is claimed.
+
+Model catalog and current pricing: [catalog rollout and licensing](docs/model-catalog.md). Basic printing starts at THB 100; custom design plus printing starts at THB 1,500.

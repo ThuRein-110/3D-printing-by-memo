@@ -1,4 +1,5 @@
 import {glbPositions} from './glb';
+import {threeMfPositions} from './three-mf';
 // Bounded parser without network, archive, material or script loading. Units: millimetres.
 export interface MeshData {positions:number[];dimensions:{x:number;y:number;z:number};volumeMm3:number;surfaceMm2:number;triangles:number;closed:boolean}
 const LIMIT=100_000;
@@ -18,6 +19,8 @@ export function parseMesh(bytes:Uint8Array, ext:string): MeshData {
    if(p[0]==='f'){if(p.length!==4)throw new Error('Triangulated OBJ required');for(const item of p.slice(1)){const idx=Number(item.split('/')[0]);if(!Number.isInteger(idx)||idx<1||!vertices[idx-1])throw new Error('Invalid OBJ index');vertices[idx-1].forEach(add);}}
    if(['mtllib','usemtl','call','csh'].includes(p[0]))throw new Error('External OBJ resources disabled');
   }
+ } else if(ext==='3mf') {
+  threeMfPositions(bytes).forEach(add);
  } else if(ext==='glb') {
   glbPositions(bytes).forEach(add);
  } else throw new Error('Unsupported mesh');

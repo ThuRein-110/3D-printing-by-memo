@@ -4,20 +4,21 @@ export const configureSchema = z.object({
  service:z.enum(['ready','custom','photo','reprint']), dimensions:dimensionSchema, materialId:z.uuid().nullable(),
  quantity:z.number().int().min(1).max(100), detail:z.enum(['standard','fine']), finishing:z.enum(['none','clean','polished']),
  fileId:z.uuid().nullable(), notes:z.string().trim().max(4000).default(''), idempotencyKey:z.uuid(),
- contactEmail:z.email().optional(),delivery:z.enum(['pickup','shipping','discuss']).default('discuss')
+ contactEmail:z.email().optional(),delivery:z.enum(['pickup','shipping','discuss']).default('discuss'),
+ catalogModelId:z.uuid().optional(),unit:z.enum(['mm','cm']).default('mm')
 });
 export const ratesSchema = z.object({
  filamentKg:z.number().nonnegative(), machineHour:z.number().nonnegative(), electricityKwh:z.number().nonnegative(),
  averageKw:z.number().nonnegative().max(10), laborHour:z.number().nonnegative(), designHour:z.number().nonnegative(),
  finishingHour:z.number().nonnegative(), supportFraction:z.number().min(0).max(2), setup:z.number().nonnegative(),
- basicMinimum:z.number().min(300), customMinimum:z.number().min(1500), packaging:z.number().nonnegative(),
+ basicMinimum:z.number().min(100), customMinimum:z.number().min(1500), packaging:z.number().nonnegative(),
  hardware:z.number().nonnegative(), failureFraction:z.number().min(0).max(1), overheadFraction:z.number().min(0).max(2),
  shipping:z.number().nonnegative(), taxFraction:z.number().min(0).max(1), margin:z.number().min(0).lt(1),
  rushFraction:z.number().min(0).max(2), discountFraction:z.number().min(0).max(1)
 });
 export const MAX_UPLOAD = 4 * 1024 * 1024; // below Vercel function payload limit, including multipart overhead
 export const MAX_TRIANGLES = 100_000;
-export const allowedExtensions = ['jpg','jpeg','png','webp','stl','obj','glb'] as const;
+export const allowedExtensions = ['jpg','jpeg','png','webp','stl','obj','glb','3mf'] as const;
 export function fileWorkflow(name:string,current:'ready'|'photo'|'custom'|'reprint'){
  const ext=extension(name);if(!allowedExtensions.includes(ext as typeof allowedExtensions[number]))throw new Error('Unsupported file type');
  return current==='custom'?'custom':['jpg','jpeg','png','webp'].includes(ext)?'photo':'ready';
@@ -26,7 +27,8 @@ export function assertWorkflow(name:string,workflow:string){const kind=['jpg','j
 export function extension(name: string) { return name.split('.').pop()?.toLowerCase() ?? ''; }
 export function validateHeader(name:string, bytes:Uint8Array) {
  const ext=extension(name); if(bytes.length===0 || bytes.length>MAX_UPLOAD) throw new Error('File must be 1 byte–4 MiB');
- if(!allowedExtensions.includes(ext as typeof allowedExtensions[number])) throw new Error('Unsupported file type; 3MF and SVG are disabled');
+ if(!allowedExtensions.includes(ext as typeof allowedExtensions[number])) throw new Error('Unsupported file type; SVG is disabled');
+ if(ext==='3mf'&&!(bytes[0]===80&&bytes[1]===75&&bytes[2]===3&&bytes[3]===4))throw new Error('Invalid 3MF archive');
  const d=new DataView(bytes.buffer,bytes.byteOffset,bytes.byteLength);
  if(['jpg','jpeg'].includes(ext) && !(bytes[0]===255 && bytes[1]===216 && bytes[2]===255)) throw new Error('Invalid JPEG');
  if(ext==='png' && ![137,80,78,71,13,10,26,10].every((v,i)=>bytes[i]===v)) throw new Error('Invalid PNG');

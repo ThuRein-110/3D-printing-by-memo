@@ -1,3 +1,4 @@
+import {catalogTranslations} from './catalog-i18n';
 export const locales=['en','th','my','zh-CN'] as const;
 export type Locale=typeof locales[number];
 export const localeNames:Record<Locale,string>={en:'English',th:'ไทย',my:'မြန်မာ','zh-CN':'简体中文'};
@@ -139,7 +140,7 @@ export const catalog={
  'studio.step5':['Estimate','ประเมินราคา','ဈေးနှုန်းခန့်မှန်းရန်','估价'],
  'studio.step6':['Request a quotation','ขอใบเสนอราคา','ဈေးနှုန်းလွှာ တောင်းဆိုရန်','申请报价'],
  'studio.drop':['Drop a file here, or choose a file','ลากไฟล์มาวาง หรือเลือกไฟล์','ဖိုင်ကို ဤနေရာတွင် ချပါ သို့မဟုတ် ရွေးချယ်ပါ','拖放文件到此处，或选择文件'],
- 'studio.formats':['JPG, PNG, WEBP · STL, OBJ, GLB · Maximum 4 MiB','JPG, PNG, WEBP · STL, OBJ, GLB · สูงสุด 4 MiB','JPG၊ PNG၊ WEBP · STL၊ OBJ၊ GLB · အများဆုံး 4 MiB','JPG、PNG、WEBP · STL、OBJ、GLB · 最大 4 MiB'],
+ 'studio.formats':['JPG, PNG, WEBP · STL, OBJ, GLB, mesh-only 3MF · Maximum 4 MiB','JPG, PNG, WEBP · STL, OBJ, GLB, 3MF เฉพาะรูปทรง · สูงสุด 4 MiB','JPG၊ PNG၊ WEBP · STL၊ OBJ၊ GLB၊ mesh-only 3MF · အများဆုံး 4 MiB','JPG、PNG、WEBP · STL、OBJ、GLB、纯网格3MF · 最大 4 MiB'],
  'studio.private':['Files stay private. Sign in before uploading or generating.','ไฟล์เป็นส่วนตัว เข้าสู่ระบบก่อนอัปโหลดหรือสร้างโมเดล','ဖိုင်များကို သီးသန့်သိမ်းထားပါသည်။ မတင်မီ သို့မဟုတ် မဖန်တီးမီ အကောင့်ဝင်ပါ။','文件私密保存。上传或生成前请先登录。'],
  'studio.routed':['Photo detected. Image-to-3D selected.','ตรวจพบรูปภาพ เลือกบริการภาพเป็น 3 มิติแล้ว','ဓာတ်ပုံတွေ့ရှိ၍ ဓာတ်ပုံမှ 3D ကို ရွေးချယ်ပြီးပါပြီ။','检测到照片，已切换为照片转 3D。'],
  'studio.upload':['Upload privately','อัปโหลดแบบส่วนตัว','သီးသန့် တင်ရန်','私密上传'],
@@ -324,6 +325,7 @@ export const catalog={
  'error.request':['The request could not be completed. Check the fields and try again.','ดำเนินการไม่สำเร็จ ตรวจข้อมูลแล้วลองอีกครั้ง','တောင်းဆိုချက် မပြီးမြောက်ပါ။ အချက်အလက်များကို စစ်ဆေးပြီး ထပ်ကြိုးစားပါ။','请求未完成，请检查填写内容后重试。'],
  'notice.submitted':['Your request has been submitted for review.','ส่งคำขอเพื่อตรวจสอบแล้ว','စစ်ဆေးရန် သင့်တောင်းဆိုချက် တင်ပြီးပါပြီ။','你的申请已提交审核。'],
  'notice.final':['A final quotation is ready for your review.','ใบเสนอราคาสุดท้ายพร้อมให้คุณตรวจสอบแล้ว','နောက်ဆုံးဈေးနှုန်းလွှာကို စစ်ဆေးနိုင်ပါပြီ။','最终报价已准备好，请查看。'],
+ ...catalogTranslations,
 } as const satisfies Record<string,readonly [string,string,string,string]>;
 export type TranslationKey=keyof typeof catalog;
 export const isLocale=(v:unknown):v is Locale=>locales.includes(v as Locale);
