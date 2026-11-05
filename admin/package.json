@@ -1,0 +1,25 @@
+{
+  "name": "@mfu/admin",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "next dev --port 3001",
+    "build": "next build",
+    "start": "next start --port 3001",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@mfu/database": "workspace:*",
+    "@mfu/pricing": "workspace:*",
+    "@mfu/types": "workspace:*",
+    "@mfu/ui": "workspace:*",
+    "@mfu/validation": "workspace:*",
+    "@mfu/three": "workspace:*",
+    "next": "16.4.5",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "zod": "^4.3.0",
+    "tailwindcss": "^4.1.18",
+    "@tailwindcss/postcss": "^4.1.18"
+  }
+}

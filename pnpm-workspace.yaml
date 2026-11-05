@@ -1,0 +1,7 @@
+packages:
+  - admin
+  - users
+  - packages/*
+onlyBuiltDependencies:
+  - sharp
+  - esbuild

@@ -1,0 +1,15 @@
+project_id = "3d-printing-mfu"
+[db]
+major_version = 15
+[db.seed]
+enabled = true
+sql_paths = ["./seed/defaults.sql"]
+[auth]
+site_url = "http://localhost:3000"
+enable_signup = true
+[auth.email]
+enable_signup = true
+enable_confirmations = true
+[auth.mfa.totp]
+enroll_enabled = true
+verify_enabled = true

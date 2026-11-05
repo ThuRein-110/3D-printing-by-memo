@@ -1,0 +1,20 @@
+// Derive column contracts from the actual migration schema in embedded PostgreSQL.
+import {PGlite} from '@electric-sql/pglite';
+import {readFileSync,readdirSync,writeFileSync} from 'node:fs';
+const db=new PGlite();
+await db.exec(`create role anon;create role authenticated;create role service_role bypassrls;create schema auth;create schema storage;create table auth.users(id uuid primary key);create table storage.buckets(id text primary key,name text,public boolean,file_size_limit bigint);create function auth.uid() returns uuid language sql as $$select null::uuid$$;create function auth.jwt() returns jsonb language sql as $$select '{}'::jsonb$$;`);
+for(const path of readdirSync('supabase/migrations').sort())await db.exec(readFileSync('supabase/migrations/'+path,'utf8').replace('create extension if not exists pgcrypto;',''));
+const {rows}=await db.query(`select table_name,column_name,data_type,udt_name,is_nullable,column_default,is_identity from information_schema.columns where table_schema='public' order by table_name,ordinal_position`);
+const tables={};for(const row of rows)(tables[row.table_name]??=[]).push(row);
+const type=c=>c.udt_name==='order_status'?'OrderStatus':['numeric','integer','bigint','double precision','real','smallint'].includes(c.data_type)?'number':c.data_type==='boolean'?'boolean':c.data_type==='jsonb'?'Json':c.data_type==='ARRAY'?'number[]':'string';
+let text="// Generated from migrations by scripts/generate-db-types.mjs; regenerate after schema changes.\nimport type {Json,OrderStatus} from '@mfu/types';\nexport type Database = {public:{Tables:{\n";
+for(const [name,cols]of Object.entries(tables)){
+ const fields=mode=>cols.map(c=>` ${c.column_name}${mode==='Row'?'':mode==='Update'||c.column_default||c.is_nullable==='YES'||c.is_identity==='YES'?'?':''}: ${type(c)}${c.is_nullable==='YES'?' | null':''};`).join('\n');
+ text+=`${name}: {Row:{\n${fields('Row')}\n};Insert:{\n${fields('Insert')}\n};Update:{\n${fields('Update')}\n};Relationships:[]};\n`;
+}
+text+='};Views:Record<string,never>;Functions:{\n';
+const fns={is_admin:['Record<string,never>','boolean'],take_rate_limit:['{p_key:string;p_limit:number;p_seconds:number}','boolean'],transition_order:['{p_id:string;p_to:OrderStatus;p_note?:string}','undefined'],inventory_adjust:['{p_material:string;p_delta:number;p_kind:string;p_reason:string;p_order?:string}','undefined'],reserve_promotion:['{p_promo:string;p_quote:string}','boolean'],claim_preview_job:['Record<string,never>',"Database['public']['Tables']['preview_jobs']['Row'][]"],reserve_provider_budget:['{p_job:string}','boolean'],commit_quote:['{p_record:Json;p_promo?:string|null;p_regular?:Json|null}','string'],issue_final_quote:['{p_id:string;p_total:number;p_notes:string;p_design:string}','undefined']};
+Object.assign(fns,{reserve_inventory:['{p_order:string;p_material:string;p_grams:number}','undefined'],settle_inventory:['{p_reservation:string;p_consume:boolean}','undefined'],operations_metrics:['Record<string,never>','Json']});
+for(const [name,[args,result]]of Object.entries(fns))text+=`${name}:{Args:${args};Returns:${result}};\n`;
+text+="};Enums:{order_status:OrderStatus};CompositeTypes:Record<string,never>}};\nexport type Row<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Row'];\n";
+writeFileSync('packages/database/src/generated.ts',text);await db.close();console.log('Generated contracts for '+Object.keys(tables).length+' tables.');

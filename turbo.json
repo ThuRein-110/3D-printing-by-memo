@@ -1,0 +1,11 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": ["tsconfig.base.json"],
+  "globalPassThroughEnv": ["SUPABASE_SERVICE_ROLE_KEY", "PREVIEW_PROVIDER", "PREVIEW_JOB_BUDGET_THB"],
+  "globalEnv": ["SUPABASE_URL", "SUPABASE_ANON_KEY", "APP_ORIGIN", "REQUIRE_ADMIN_MFA"],
+  "tasks": {
+    "build": { "dependsOn": ["^build"], "outputs": [".next/**", "!.next/cache/**"] },
+    "typecheck": { "dependsOn": ["^typecheck"], "outputs": [] },
+    "dev": { "cache": false, "persistent": true }
+  }
+}

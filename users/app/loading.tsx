@@ -1,0 +1,1 @@
+export default function Loading(){return <p className="wrap section" role="status">Loading…</p>;}

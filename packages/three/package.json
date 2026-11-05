@@ -1,0 +1,20 @@
+{
+  "name": "@mfu/three",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*",
+    "./Preview.tsx": "./src/Preview.tsx"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "react": "19.3.1",
+    "three": "^0.183.0",
+    "@react-three/fiber": "9.8.2",
+    "@react-three/drei": "^10.7.7"
+  }
+}

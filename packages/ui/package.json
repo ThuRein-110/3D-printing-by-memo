@@ -1,0 +1,20 @@
+{
+  "name": "@mfu/ui",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@mfu/pricing": "workspace:*",
+    "@mfu/three": "workspace:*",
+    "@mfu/types": "workspace:*",
+    "next": "16.4.5",
+    "react": "19.3.1"
+  }
+}

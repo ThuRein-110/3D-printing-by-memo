@@ -1,0 +1,43 @@
+node_modules/
+.next/
+.turbo/
+.env*
+!.env.example
+.vercel/
+test-results/
+playwright-report/
+coverage/
+*.tsbuildinfo
+
+# Credentials and local service state
+secrets/
+credentials/
+credentials*.json
+*service-account*.json
+*.pem
+*.key
+*.p12
+*.pfx
+.supabase/
+supabase/.temp/
+supabase/.branches/
+
+# Private customer inputs, models, payment evidence and exports
+uploads/
+customer-uploads/
+customer_uploads/
+customer_files/
+private-storage/
+payment-evidence/
+customer-exports/
+
+# Additional generated artifacts
+dist/
+build/
+out/
+*.log
+*.sqlite
+*.sqlite3
+*.db
+.DS_Store
+Thumbs.db
