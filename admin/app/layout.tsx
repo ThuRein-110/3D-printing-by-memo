@@ -1,5 +1,6 @@
 import './globals.css';
-import type { Metadata } from 'next';
-import { Shell } from '@mfu/ui/Shell.tsx';
-export const metadata: Metadata = {title: 'Admin · 3D Printing MFU By Memo',description: 'Turn Your Ideas into Reality. PETG 3D printing and custom design.'};
-export default function Layout({children}:{children:React.ReactNode}){return <html lang="th"><body><Shell admin={true}>{children}</Shell></body></html>;}
+import {Shell} from '@mfu/ui/Shell.tsx';
+import {BOOTSTRAP} from '@mfu/ui/settings-script.ts';
+import {preferences,localizedMetadata} from '@mfu/ui/server-locale.ts';
+export async function generateMetadata(){return localizedMetadata(true);}
+export default async function Layout({children}:{children:React.ReactNode}){const settings=await preferences();return <html lang={settings.locale} data-theme={settings.theme} suppressHydrationWarning><head><script dangerouslySetInnerHTML={{__html:BOOTSTRAP}}/></head><body><Shell admin={true} {...settings}>{children}</Shell></body></html>;}

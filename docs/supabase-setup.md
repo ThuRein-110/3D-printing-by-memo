@@ -1,5 +1,7 @@
 # Supabase setup
 
+For the existing eight-migration deployment, follow the [009 rollout](production-upgrade.md#safe-rollout-against-the-existing-database). Do not reset or reseed it. The initial provisioning instructions below apply to new environments.
+
 One Supabase project serves both apps. No project was created or linked during implementation; credentials were absent.
 
 Install the official Supabase CLI using its supported platform instructions, authenticate, create/select a project, then run from the repository root:
@@ -36,6 +38,6 @@ Migrations include every requested business table, plus rate limits, privacy req
 supabase gen types typescript --linked | Set-Content -Encoding utf8 packages/database/src/generated.ts
 ```
 
-The committed generated contract covers all 30 tables and runtime RPCs and is bound to both SSR and service clients. It is derived from migrations with `node scripts/generate-db-types.mjs`; use the official linked generator above when you have a real Supabase project. The dynamic configuration editor validates fields with Zod before its narrow type boundary.
+The committed generated contract covers all 33 tables and runtime RPCs and is bound to both SSR and service clients. It is derived from migrations with `node scripts/generate-db-types.mjs`; use the official linked generator above when you have a real Supabase project. The dynamic configuration editor validates fields with Zod before its narrow type boundary.
 
 Run `pnpm test:rls` locally, then perform two-user and MFA tests against your actual Supabase environment. Embedded PostgreSQL tests do not verify Supabase gateway settings, Storage policies, SMTP delivery or hosted backups.

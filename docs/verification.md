@@ -1,5 +1,7 @@
 # Verification record — 5 November 2026
 
+This is the original baseline verification record. Current upgrade verification is tracked in [upgrade-verification.md](upgrade-verification.md).
+
 Executed locally on Windows / Node 22.17.1 / pnpm 10.34.9, from the monorepo root.
 
 | Check | Result | Scope |

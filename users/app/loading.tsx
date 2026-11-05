@@ -1,1 +1,2 @@
-export default function Loading(){return <p className="wrap section" role="status">Loading…</p>;}
+'use client';
+export {LoadingState as default} from '@mfu/ui/route-states.tsx';

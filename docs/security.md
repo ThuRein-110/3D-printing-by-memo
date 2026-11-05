@@ -1,5 +1,7 @@
 # Security model and review
 
+Upgrade 009 adds column-level protection for quote financial JSON and revokes customer access to pricing tables. Customer APIs project safe estimates; admin cost access is checked server-side. Generation has serialized monthly allowance reservations, daily customer limits, consent records and an atomic at-most-once submission guard. The GLB parser has bounded scene traversal, accessor decoding and triangle counts; it never fetches external resources. See [production upgrade](production-upgrade.md).
+
 Trust boundaries are customer browser → Next server → Supabase; admin browser → independent Next server → the same backend; and durable worker → Meshy → untrusted output parsing. The service credential bypasses RLS, so explicit handler ownership checks are essential in addition to database read policies. Keep it server-only, rotate on exposure and never use it for browser initialization.
 
 Implemented controls:

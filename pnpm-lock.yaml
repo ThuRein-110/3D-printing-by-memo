@@ -177,11 +177,20 @@ importers:
       three:
         specifier: ^0.183.0
         version: 0.183.2
+      zod:
+        specifier: ^4.3.0
+        version: 4.6.7
 
   packages/types: {}
 
   packages/ui:
     dependencies:
+      '@fontsource/noto-sans-myanmar':
+        specifier: ^5.3.0
+        version: 5.3.0
+      '@fontsource/noto-sans-sc':
+        specifier: ^5.3.1
+        version: 5.3.1
       '@mfu/pricing':
         specifier: workspace:*
         version: link:../pricing
@@ -191,6 +200,9 @@ importers:
       '@mfu/types':
         specifier: workspace:*
         version: link:../types
+      '@mfu/validation':
+        specifier: workspace:*
+        version: link:../validation
       next:
         specifier: 16.4.5
         version: 16.4.5(@babel/core@7.29.13)(@playwright/test@1.64.1)(@types/node@22.20.5)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -532,6 +544,12 @@ packages:
   '@eslint/plugin-kit@0.7.3':
     resolution: {integrity: sha512-IkO+/KEUvwbVpiURZg+P7zF74z5Jxe0UgJxVni+RtoHQ6IZieXaO02kmadomap/q+l6bc/jdPGGqTjhuZnuz1Q==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
+
+  '@fontsource/noto-sans-myanmar@5.3.0':
+    resolution: {integrity: sha512-/ja/Fbmtv4TRpd8LgnVFvDRFIzR0bvYaVCwGNK6Hnn5uBGccCfGFnZ7wRPG1/IyMnScVIjrnOmN+2jOL0b8tRQ==}
+
+  '@fontsource/noto-sans-sc@5.3.1':
+    resolution: {integrity: sha512-YxZ/VWAWo9FWzH08Q6fGTzIW6vYNP2TMhUFCnfhlimbhdXnWrxJLrzX3KWt2FKnV0s8XiM5vjpGHQiyFRlTj0w==}
 
   '@humanfs/core@0.19.2':
     resolution: {integrity: sha512-UhXNm+CFMWcbChXywFwkmhqjs3PRCmcSa/hfBgLIb7oQ5HNb1wS0icWsGtSAUNgefHeI+eBrA8I1fxmbHsGdvA==}
@@ -2384,6 +2402,10 @@ snapshots:
     dependencies:
       '@eslint/core': 1.2.1
       levn: 0.4.1
+
+  '@fontsource/noto-sans-myanmar@5.3.0': {}
+
+  '@fontsource/noto-sans-sc@5.3.1': {}
 
   '@humanfs/core@0.19.2':
     dependencies:

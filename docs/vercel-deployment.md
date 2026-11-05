@@ -1,8 +1,8 @@
 # Two independent Vercel projects
 
-No Vercel CLI or authenticated Vercel configuration was available during implementation. No projects or URLs have been created. The local Next production builds are verified separately; hosted Vercel builds and environment setup remain unverified.
+The operator reports existing independent deployments. Vercel CLI 65.11.0 reports **Logged out**, and deployment credentials and actual app URLs are unavailable in this checkout. Local production builds are verified separately; existing hosted configuration and redeployment are not claimed as verified. Follow the migration/worker rollout in [production upgrade](production-upgrade.md) before enabling new generation.
 
-Create exactly these projects, each importing the **same repository**:
+Use two projects importing the **same repository**. Identify the intended existing projects before creating anything; these names are suggestions:
 
 | Project | Root Directory | Framework |
 | --- | --- | --- |
@@ -15,7 +15,7 @@ Each app has a vercel.json. From the app root, installation runs `cd .. && pnpm 
 
 ## Authenticated setup
 
-1. Import `https://github.com/ThuRein-110/3D-printing-by-memo` twice through Vercel's dashboard, using production branch `main` and the names/root directories above. Confirm the expected source commit is present before importing. GitHub publication does not itself create or authenticate either Vercel project.
+1. Verify the two intended projects import `https://github.com/ThuRein-110/3D-printing-by-memo`, using production branch `main` and the root directories above. Import a missing project only after checking the existing project list. Confirm the expected source commit is present. GitHub publication does not itself create or authenticate either Vercel project.
 2. Add SUPABASE_URL, SUPABASE_ANON_KEY and server-only SUPABASE_SERVICE_ROLE_KEY separately in each project's Development/Preview/Production environment. APP_ORIGIN must match that app's exact browser origin for each deployment. Use a stable preview alias or update the value for preview testing. Do not copy a localhost origin into production.
 3. Set customer PREVIEW_PROVIDER=disabled initially. Only enable Meshy enqueueing once the separate worker, budget and consent flow are verified. The Meshy API key belongs on the worker, not either web project.
 4. Configure Supabase Auth origin allowlists and production SMTP. Provision and MFA-test the admin.
@@ -47,11 +47,11 @@ Relinking root checkout state is intentional; verify the selected project before
 
 ## Deployment record
 
-Users URL: not deployed.
+Users URL: not supplied or verified during this upgrade.
 
-Admin URL: not deployed.
+Admin URL: not supplied or verified during this upgrade.
 
-Supabase project: not configured.
+Supabase project: operator reports eight migrations applied; live access unavailable in this checkout. Migration 009 still requires reviewed application.
 
 Worker host: not configured.
 

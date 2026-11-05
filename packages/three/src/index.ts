@@ -1,1 +1,3 @@
-export { parseMesh, approximateUsage } from './geometry';
+export { parseMesh, approximateUsage, resizeMesh } from './geometry';
+
+export {binaryStl} from './export';

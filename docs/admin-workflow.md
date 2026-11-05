@@ -2,9 +2,11 @@
 
 Create the initial account and role out of band using the Supabase setup guide. Sign in, enroll TOTP if necessary, and complete MFA. All data routes verify role and AAL2 again.
 
-The dashboard and operational lists show real database rows, capped at the latest 100. They never display fabricated revenue. A live metrics panel separates manually verified cash receipts, completed-order net sales, recorded costs/labor and missing-cost exceptions. Provider reservations are labeled as allowances rather than actual billing. Materials, spools, pricing versions, promotions, production records, gallery consent and settings use schema-validated configuration editors with an explicit reviewed-change checkbox. The editor currently uses JSON to expose all fields; it is an operator tool, not a complete polished form for every data type.
+The dashboard and operational lists show real database rows, capped at the latest 100. They never display fabricated revenue. A live metrics panel separates manually verified cash receipts, completed-order net sales, recorded costs/labor and missing-cost exceptions. Provider reservations are labeled as allowances rather than actual billing. Materials, spools, pricing versions, promotions, production records, gallery consent and settings use schema-validated configuration editors with an explicit reviewed-change checkbox. The upgraded editor provides structured, translated fields; slicer/settings JSON remains a technical configuration editor. All operational controls support four languages and light/dark/system themes. Settings and AI generation jobs add daily quotas, monthly allowance, reviewed credit cost, concurrency and provider-reported consumed-credit telemetry. See [production upgrade](production-upgrade.md) for setup.
 
 Record actual stock in Inventory and enable colors in Materials. Spool records track suppliers, batches and remaining grams. Aggregate customer availability changes through audited inventory transactions. Use the order reservation form to reserve, consume or release material; settlement is idempotent and consumption does not subtract available grams twice. Spool-level reconciliation remains manual.
+
+Dedicated filament images require the publication checkbox. Only purpose-marked filament media is served by the sanitized public color endpoint; arbitrary customer images cannot be published through material IDs.
 
 For an order:
 

@@ -40,6 +40,9 @@ customer_files: {Row:{
  analysis: Json | null;
  kind: string;
  created_at: string;
+ generated: boolean;
+ purpose: string;
+ source_job_id: string | null;
 };Insert:{
  id?: string;
  owner_id: string;
@@ -51,6 +54,9 @@ customer_files: {Row:{
  analysis?: Json | null;
  kind: string;
  created_at?: string;
+ generated?: boolean;
+ purpose?: string;
+ source_job_id?: string | null;
 };Update:{
  id?: string;
  owner_id?: string;
@@ -62,6 +68,9 @@ customer_files: {Row:{
  analysis?: Json | null;
  kind?: string;
  created_at?: string;
+ generated?: boolean;
+ purpose?: string;
+ source_job_id?: string | null;
 };Relationships:[]};
 customers: {Row:{
  id: string;
@@ -132,6 +141,57 @@ gallery_items: {Row:{
  image_path?: string | null;
  created_at?: string;
 };Relationships:[]};
+generation_months: {Row:{
+ month: string;
+ reserved_thb: number;
+};Insert:{
+ month: string;
+ reserved_thb?: number;
+};Update:{
+ month?: string;
+ reserved_thb?: number;
+};Relationships:[]};
+generation_reservations: {Row:{
+ job_id: string;
+ month: string;
+ amount_thb: number;
+ created_at: string;
+};Insert:{
+ job_id: string;
+ month: string;
+ amount_thb: number;
+ created_at?: string;
+};Update:{
+ job_id?: string;
+ month?: string;
+ amount_thb?: number;
+ created_at?: string;
+};Relationships:[]};
+generation_settings: {Row:{
+ id: boolean;
+ enabled: boolean;
+ daily_customer_limit: number;
+ monthly_budget_thb: number;
+ credit_cost_thb: number | null;
+ concurrency: number;
+ updated_at: string;
+};Insert:{
+ id?: boolean;
+ enabled?: boolean;
+ daily_customer_limit?: number;
+ monthly_budget_thb?: number;
+ credit_cost_thb?: number | null;
+ concurrency?: number;
+ updated_at?: string;
+};Update:{
+ id?: boolean;
+ enabled?: boolean;
+ daily_customer_limit?: number;
+ monthly_budget_thb?: number;
+ credit_cost_thb?: number | null;
+ concurrency?: number;
+ updated_at?: string;
+};Relationships:[]};
 inventory_reservations: {Row:{
  id: string;
  order_id: string;
@@ -189,6 +249,7 @@ materials: {Row:{
  low_stock_grams: number;
  created_at: string;
  reserved_grams: number;
+ image_file_id: string | null;
 };Insert:{
  id?: string;
  name?: string;
@@ -199,6 +260,7 @@ materials: {Row:{
  low_stock_grams?: number;
  created_at?: string;
  reserved_grams?: number;
+ image_file_id?: string | null;
 };Update:{
  id?: string;
  name?: string;
@@ -209,6 +271,7 @@ materials: {Row:{
  low_stock_grams?: number;
  created_at?: string;
  reserved_grams?: number;
+ image_file_id?: string | null;
 };Relationships:[]};
 model_versions: {Row:{
  id: string;
@@ -369,6 +432,14 @@ preview_jobs: {Row:{
  output_file_id: string | null;
  created_at: string;
  cancel_requested: boolean;
+ progress: number | null;
+ consumed_credits: number | null;
+ estimated_credits: number;
+ credit_cost_thb: number | null;
+ request_key: string;
+ poll_failures: number;
+ consented_at: string | null;
+ consent_version: string | null;
 };Insert:{
  id?: string;
  owner_id: string;
@@ -384,6 +455,14 @@ preview_jobs: {Row:{
  output_file_id?: string | null;
  created_at?: string;
  cancel_requested?: boolean;
+ progress?: number | null;
+ consumed_credits?: number | null;
+ estimated_credits?: number;
+ credit_cost_thb?: number | null;
+ request_key?: string;
+ poll_failures?: number;
+ consented_at?: string | null;
+ consent_version?: string | null;
 };Update:{
  id?: string;
  owner_id?: string;
@@ -399,6 +478,14 @@ preview_jobs: {Row:{
  output_file_id?: string | null;
  created_at?: string;
  cancel_requested?: boolean;
+ progress?: number | null;
+ consumed_credits?: number | null;
+ estimated_credits?: number;
+ credit_cost_thb?: number | null;
+ request_key?: string;
+ poll_failures?: number;
+ consented_at?: string | null;
+ consent_version?: string | null;
 };Relationships:[]};
 pricing_rules: {Row:{
  id: string;
@@ -728,5 +815,10 @@ issue_final_quote:{Args:{p_id:string;p_total:number;p_notes:string;p_design:stri
 reserve_inventory:{Args:{p_order:string;p_material:string;p_grams:number};Returns:undefined};
 settle_inventory:{Args:{p_reservation:string;p_consume:boolean};Returns:undefined};
 operations_metrics:{Args:Record<string,never>;Returns:Json};
+configure_generation:{Args:{p_enabled:boolean;p_daily:number;p_monthly:number;p_credit:number|null;p_concurrency:number};Returns:undefined};
+enqueue_generation:{Args:{p_owner:string;p_file:string;p_request:string};Returns:string};
+start_generation:{Args:{p_job:string};Returns:boolean};
+retry_generation:{Args:{p_id:string};Returns:undefined};
+generation_metrics:{Args:Record<string,never>;Returns:Json};
 };Enums:{order_status:OrderStatus};CompositeTypes:Record<string,never>}};
 export type Row<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Row'];

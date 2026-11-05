@@ -1,6 +1,6 @@
 # Operations and verification
 
-Before launch, publish actual rates, verify physical stock, enable only available colors, configure real bank/contact settings, define production windows, review cancellation/deposit terms and retention obligations, and confirm daily provider allowances. No seed claims inventory exists or an Early Bird promotion is active.
+Before launch, publish actual rates, verify physical stock, enable only available colors, configure real bank/contact settings, define production windows, review cancellation/deposit terms and retention obligations, and confirm monthly provider allowances. No seed claims inventory exists or an Early Bird promotion is active.
 
 Run CI commands from README on every change. Keep lockfile committed. Audit production dependencies regularly. Backup/restore and point-in-time recovery depend on the Supabase plan and must be tested by the operator. The web apps are replaceable; PostgreSQL, private Storage and provider records require recovery procedures.
 
