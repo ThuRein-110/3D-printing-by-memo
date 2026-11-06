@@ -85,6 +85,7 @@ catalog_models: {Row:{
  search_document: string | null;
  created_at: string;
  updated_at: string;
+ showcase_visible: boolean;
 };Insert:{
  id?: string;
  name: string;
@@ -110,6 +111,7 @@ catalog_models: {Row:{
  search_document?: string | null;
  created_at?: string;
  updated_at?: string;
+ showcase_visible?: boolean;
 };Update:{
  id?: string;
  name?: string;
@@ -135,6 +137,7 @@ catalog_models: {Row:{
  search_document?: string | null;
  created_at?: string;
  updated_at?: string;
+ showcase_visible?: boolean;
 };Relationships:[]};
 customer_files: {Row:{
  id: string;
@@ -1004,5 +1007,6 @@ retry_generation:{Args:{p_id:string};Returns:undefined};
 generation_metrics:{Args:Record<string,never>;Returns:Json};
 save_catalog_model:{Args:{p_id:string;p_values:Json};Returns:string};
 catalog_categories:{Args:Record<string,never>;Returns:Json};
+browse_catalog:{Args:{p_seed:string;p_page?:number;p_query?:string;p_category?:string;p_min?:number|null;p_max?:number|null};Returns:Json};
 };Enums:{order_status:OrderStatus};CompositeTypes:Record<string,never>}};
 export type Row<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Row'];

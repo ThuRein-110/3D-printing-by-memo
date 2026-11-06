@@ -2,6 +2,8 @@
 
 The homepage now shows a searchable, database-backed catalog. Customer routes are `/models`, `/models/[id]` and `/configure?model=<id>`. Admin routes are `/models` and `/models/[id]` in the separate admin app. Existing uploads, photo reconstruction, quotations, inventory controls, themes, branding and four languages remain available.
 
+The subsequent [reference showcase upgrade](creality-showcase.md) adds a pool of 16 manually curated source references, eight-at-a-time random discovery and inline “See more.” Reference publication is separate from commercial approval and never enables ordering or asset redistribution.
+
 ## Publishing real models
 
 Sign in to admin and complete MFA. Add a model, name its creator, choose a category/tags and record the exact license plus private evidence notes. Creality references accept only HTTPS model-detail URLs on the official desktop/mobile hosts. The application never fetches that URL, scrapes the library, imports provider images, embeds an undocumented viewer or assumes a public product API exists. `catalog-provider.ts` defines an adapter contract for a future authorized integration; the provider registry is intentionally empty.

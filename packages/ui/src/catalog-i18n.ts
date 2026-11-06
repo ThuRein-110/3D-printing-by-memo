@@ -1,4 +1,9 @@
 export const catalogTranslations={
+ 'catalog.more':['See more models','ดูโมเดลเพิ่มเติม','မော်ဒယ်များ ထပ်ကြည့်ရန်','查看更多模型'],
+ 'catalog.referenceOnly':['Reference only · Not available to order','ข้อมูลอ้างอิงเท่านั้น · ยังสั่งผลิตไม่ได้','ရည်ညွှန်းရန်သာ · အော်ဒါမရနိုင်ပါ','仅供参考 · 暂不可订购'],
+ 'catalog.referenceNotice':['Explore this creator’s model as inspiration. MEMO has not approved printing or image/file delivery for this reference. Review its creator and terms at the original source.','ชมโมเดลของผู้สร้างเพื่อเป็นแรงบันดาลใจ MEMO ยังไม่ได้อนุมัติการพิมพ์หรือส่งรูปและไฟล์สำหรับรายการอ้างอิงนี้ โปรดดูผู้สร้างและเงื่อนไขที่ต้นฉบับ','ဖန်တီးသူ၏ မော်ဒယ်ကို အကြံယူရန် ကြည့်ပါ။ ဤရည်ညွှန်းအတွက် ပုံနှိပ်ခြင်း၊ ပုံနှင့် ဖိုင်ပေးပို့ခြင်းကို MEMO မအတည်ပြုရသေးပါ။ မူရင်းတွင် ဖန်တီးသူနှင့် စည်းကမ်းများကို ကြည့်ပါ။','浏览创作者的模型以获取灵感。MEMO尚未批准此参考模型的打印、图片或文件交付，请在原始来源查看创作者及条款。'],
+ 'catalog.showcasePublish':['Publish a reference-only source card (no sales or assets)','เผยแพร่การ์ดอ้างอิงต้นฉบับ (ไม่ขายและไม่เผยแพร่ไฟล์)','ရည်ညွှန်းကတ်သာ ဖော်ပြရန် (ရောင်းချခြင်း၊ ဖိုင်မပါ)','发布仅供参考的来源卡片（不销售或提供素材）'],
+ 'catalog.showcaseNote':['Reference-only publication requires sales, availability and asset previews to be off, with no images, files, price or lead time.','การเผยแพร่ข้อมูลอ้างอิงต้องปิดการขาย ความพร้อมสั่งผลิต และตัวอย่างไฟล์ โดยไม่มีรูป ไฟล์ ราคา หรือระยะผลิต','ရည်ညွှန်းကတ်အတွက် ရောင်းချမှု၊ အော်ဒါနှင့် ဖိုင်နမူနာကို ပိတ်ထားပြီး ပုံ၊ ဖိုင်၊ ဈေးနှင့် ထုတ်လုပ်ရက် မပါရပါ။','仅供参考模式须关闭销售、可订购及素材预览，不包含图片、文件、价格或生产天数。'],
  'catalog.requestId':['Request ID','รหัสคำขอ','တောင်းဆိုမှု ID','申请编号'],
  'catalog.accountEmail':['Account email','อีเมลบัญชี','အကောင့် အီးမေးလ်','账户邮箱'],
  'catalog.customerName':['Customer name','ชื่อลูกค้า','ဖောက်သည်အမည်','客户姓名'],

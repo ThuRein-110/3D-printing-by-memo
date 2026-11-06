@@ -29,3 +29,16 @@ it('supports reviewed private catalog production without redistributing the lice
  const row=(await db.query<{id:string;final_catalog_asset_id:string;final_design_file_id:string|null}>('select id,final_catalog_asset_id,final_design_file_id from public.orders')).rows[0];expect(row.final_catalog_asset_id).toBe(asset);expect(row.final_design_file_id).toBe(null);
  await db.query("select public.transition_order($1,'reviewing','')",[row.id]);await db.query("select public.transition_order($1,'awaiting_customer_approval','')",[row.id]);await user(owner);expect((await db.query('select * from public.catalog_assets')).rows).toHaveLength(0);await db.query("select public.transition_order($1,'approved','Accepted reviewed catalog print')",[row.id]);await db.exec('reset role');await expect(db.query('update public.quotes set final_total=100 where id=$1',[quote])).rejects.toThrow('immutable');await expect(db.query("update public.quote_cost_reviews set review='{}' where quote_id=$1",[quote])).rejects.toThrow('immutable');
 });
+it('shows real source references without authorizing orders or exposing files',async()=>{
+ await db.exec('reset role');await db.exec(readFileSync('supabase/seed/creality-showcase.sql','utf8'));await user(owner);
+ const rows=await db.query<{available:boolean;commercial_allowed:boolean;mesh_asset_id:string|null;image_asset_id:string|null}>("select available,commercial_allowed,mesh_asset_id,image_asset_id from public.catalog_models where showcase_visible");expect(rows.rows).toHaveLength(16);for(const row of rows.rows){expect(row.available).toBe(false);expect(row.commercial_allowed).toBe(false);expect(row.mesh_asset_id).toBeNull();expect(row.image_asset_id).toBeNull();}
+ await db.exec('reset role');await expect(db.query('select public.commit_quote($1)',[{id:other,owner_id:owner,request_key:other,service:'ready',configuration:{catalogModelId:'a0611000-0000-4000-8000-000000000001',materialId:material},snapshot:{},estimate:{}}])).rejects.toThrow('Catalog model unavailable');
+ await expect(db.exec("update public.catalog_models set available=true where showcase_visible")).rejects.toThrow('reference_only_showcase');
+});
+it('returns stable random batches of eight without repeating records on the next page',async()=>{
+ await db.exec('reset role');const seed='12345678-1234-4234-8234-123456789abc';
+ const batch=async(s:string,page=0)=>((await db.query<{result:{data:{id:string}[];count:number}}>('select public.browse_catalog($1,$2) as result',[s,page])).rows[0].result);
+ const first=await batch(seed),again=await batch(seed),next=await batch(seed,1);expect(first.data).toHaveLength(8);expect(first).toEqual(again);expect(first.count).toBe(17);expect(next.data).toHaveLength(8);expect(new Set([...first.data,...next.data].map(m=>m.id)).size).toBe(16);expect((await batch(other)).data.map(m=>m.id)).not.toEqual(first.data.map(m=>m.id));
+ const filtered=(await db.query<{result:{data:{name:string}[];count:number}}>("select public.browse_catalog($1,0,'ghost','Toys & Games',null,null) as result",[seed])).rows[0].result;expect(filtered.count).toBe(1);expect(filtered.data[0].name).toBe('Ghost Stress Relief Toy');
+ await user(owner);await expect(db.query('select public.browse_catalog($1)',[seed])).rejects.toThrow('permission denied');
+});

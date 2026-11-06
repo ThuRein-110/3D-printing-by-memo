@@ -19,7 +19,7 @@ async function previewAsset(db:DB,id:string,publicPreview=false){
  const bytes=new ArrayBuffer(mesh.positions.length*4),view=new DataView(bytes);mesh.positions.forEach((value,index)=>view.setFloat32(index*4,value,true));
  return new Response(bytes,{headers:{'Content-Type':'application/vnd.memo.mesh','Cache-Control':publicPreview?'public,max-age=60':'private,no-store','X-Content-Type-Options':'nosniff'}});
 }
-export const publicModel=(m:Row<'catalog_models'>)=>({id:m.id,name:m.name,description:m.description,source_kind:m.source_kind,source_url:m.source_url,creator:m.creator,creator_url:m.creator_url,category:m.category,tags:m.tags,license_name:m.license_name,license_url:m.license_url,commercial_allowed:m.commercial_allowed,available:m.available,starting_price:m.starting_price,lead_time_days:m.lead_time_days,hasPreview:!!m.mesh_asset_id&&m.preview_allowed,imageUrl:m.image_asset_id?`/api/public/catalog/${m.id}/image`:null});
+export const publicModel=(m:Row<'catalog_models'>)=>({id:m.id,name:m.name,description:m.description,source_kind:m.source_kind,source_url:m.source_url,creator:m.creator,creator_url:m.creator_url,category:m.category,tags:m.tags,license_name:m.license_name,license_url:m.license_url,commercial_allowed:m.commercial_allowed,available:m.available,starting_price:m.starting_price,lead_time_days:m.lead_time_days,referenceOnly:m.showcase_visible,hasPreview:!!m.mesh_asset_id&&m.preview_allowed,imageUrl:m.image_asset_id?`/api/public/catalog/${m.id}/image`:null});
 export async function selectedCatalog(db:DB,id:string){
  const {data,error}=await db.from('catalog_models').select('*').eq('id',id).eq('visible',true).eq('commercial_allowed',true).eq('license_approved',true).eq('printability','approved').single();
  if(error||!data)throw new Error('Catalog model unavailable');return data;
@@ -33,15 +33,13 @@ export async function catalogPublic(req:Request,path:string[]):Promise<Response|
  }
  if(!path[2]){
   const page=z.coerce.number().int().min(0).max(1000).parse(params.get('page')??0);
-  let query=db.from('catalog_models').select('*',{count:'exact'}).eq('visible',true).eq('commercial_allowed',true).eq('license_approved',true).eq('printability','approved');
-  const search=params.get('q')?.trim();if(search){if(search.length>160)throw new Error('Invalid search');query=query.textSearch('search_document',search,{type:'websearch',config:'simple'});}
-  if(params.get('category'))query=query.eq('category',params.get('category')!.slice(0,80));
-  if(params.has('min'))query=query.gte('starting_price',z.coerce.number().nonnegative().max(1000000).parse(params.get('min')));
-  if(params.has('max'))query=query.lte('starting_price',z.coerce.number().nonnegative().max(1000000).parse(params.get('max')));
-  const {data,error,count}=await query.order('created_at',{ascending:false}).range(page*24,page*24+23);if(error)throw new Error('Database operation failed');
-  const categories=await db.rpc('catalog_categories');if(categories.error)throw new Error('Database operation failed');return json({data:data.map(publicModel),count,categories:categories.data,page});
+  const seed=z.uuid().parse(params.get('seed')??randomUUID()),search=z.string().max(160).parse(params.get('q')?.trim()??''),category=z.string().max(80).parse(params.get('category')??'');
+  const min=params.has('min')?z.coerce.number().nonnegative().max(1000000).parse(params.get('min')):null,max=params.has('max')?z.coerce.number().nonnegative().max(1000000).parse(params.get('max')):null;
+  const [batch,categories]=await Promise.all([db.rpc('browse_catalog',{p_seed:seed,p_page:page,p_query:search,p_category:category,p_min:min,p_max:max}),db.rpc('catalog_categories')]);
+  if(batch.error||categories.error)throw new Error('Database operation failed');
+  const result=batch.data as {data:Row<'catalog_models'>[];count:number};return json({data:result.data.map(publicModel),count:result.count,categories:categories.data,page,seed});
  }
- const m=await selectedCatalog(db,z.uuid().parse(path[2]));
+ const {data:m,error:lookupError}=await db.from('catalog_models').select('*').eq('id',z.uuid().parse(path[2])).or('showcase_visible.eq.true,and(visible.eq.true,commercial_allowed.eq.true,license_approved.eq.true,printability.eq.approved)').single();if(lookupError||!m)throw new Error('Catalog model unavailable');
  if(!path[3])return json({data:publicModel(m)});
  if(path[3]==='image'&&m.image_asset_id){
   const {data:a}=await db.from('catalog_assets').select('*').eq('id',m.image_asset_id).eq('kind','image').single();if(!a)throw new Error('File unavailable');
