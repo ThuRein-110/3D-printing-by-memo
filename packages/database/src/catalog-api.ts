@@ -40,7 +40,7 @@ export async function catalogPublic(req:Request,path:string[]):Promise<Response|
   if(batch.error||categories.error)throw new Error('Database operation failed');
   const result=batch.data as {data:Row<'catalog_models'>[];count:number};return json({data:result.data.map(publicModel),count:result.count,categories:categories.data,page,seed});
  }
- const {data:m,error:lookupError}=await db.from('catalog_models').select('*').eq('id',z.uuid().parse(path[2])).or('showcase_visible.eq.true,and(visible.eq.true,commercial_allowed.eq.true,license_approved.eq.true,printability.eq.approved)').single();if(lookupError||!m)throw new Error('Catalog model unavailable');
+ const {data:m,error:lookupError}=await db.from('catalog_models').select('*').eq('id',z.uuid().parse(path[2])).eq('visible',true).eq('commercial_allowed',true).eq('license_approved',true).eq('printability','approved').single();if(lookupError||!m)throw new Error('Catalog model unavailable');
  if(!path[3])return json({data:publicModel(m)});
  if(path[3]==='image')return thumbnailAllowed(m)?catalogImageResponse(db,m.image_asset_id!,true):new Response(null,{status:404});
  if(path[3]==='preview'&&m.preview_allowed&&m.mesh_asset_id){

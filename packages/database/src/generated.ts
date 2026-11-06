@@ -60,6 +60,19 @@ catalog_assets: {Row:{
  analysis?: Json | null;
  created_at?: string;
 };Relationships:[]};
+catalog_favorites: {Row:{
+ owner_id: string;
+ model_id: string;
+ created_at: string;
+};Insert:{
+ owner_id?: string;
+ model_id: string;
+ created_at?: string;
+};Update:{
+ owner_id?: string;
+ model_id?: string;
+ created_at?: string;
+};Relationships:[]};
 catalog_inquiries: {Row:{
  id: string;
  owner_id: string;

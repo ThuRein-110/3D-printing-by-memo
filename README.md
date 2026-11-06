@@ -49,3 +49,5 @@ Customer authentication, MFU verification and student offers: [setup and securit
 
 
 The licensed **3D Printing Inspiration** gallery, image credits and custom-design request workflow are documented in [docs/inspiration-gallery.md](docs/inspiration-gallery.md). The 16 unlicensed Creality references remain private.
+
+The approved-only marketplace grid, category/search behavior, account favorites and order handoff are documented in [docs/model-gallery.md](docs/model-gallery.md).
