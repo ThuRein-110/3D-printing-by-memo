@@ -4,7 +4,8 @@ permissions:
   contents: read
 jobs:
   checks:
-    runs-on: ubuntu-latest
+    # Keep browser dependencies on a reproducible runner image.
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -22,6 +23,7 @@ jobs:
       - run: pnpm exec turbo build --filter=@mfu/users
       - run: pnpm exec turbo build --filter=@mfu/admin
       - run: pnpm exec playwright install --with-deps chromium
+        timeout-minutes: 5
       - run: pnpm test:e2e
       - uses: actions/upload-artifact@v4
         if: failure()
