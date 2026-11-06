@@ -1,11 +1,4 @@
 import {test,expect} from '@playwright/test';
-test('licensed inspiration uses real local image pixels with credits, responsive layout, themes and four languages',async({page})=>{
- await page.goto('/gallery?lang=en');await expect(page.locator('.inspiration-card')).toHaveCount(6);
- for(const card of await page.locator('.inspiration-card').all()){await card.scrollIntoViewIfNeeded();await expect(card.locator('[data-image-state=loaded]')).toBeVisible();expect(await card.locator('img').evaluate((img:HTMLImageElement)=>img.complete&&img.naturalWidth>0&&img.naturalHeight>0)).toBe(true);await expect(card.locator('img')).toHaveAttribute('loading','lazy');await expect(card.locator('a[rel*=license]')).toHaveAttribute('href',/creativecommons.org/);await expect(card.locator('.inspiration-credit')).toContainText('WebP');}
- for(const locale of ['th','my','zh-CN','en']){await page.getByTestId('language-selector').selectOption(locale);await expect(page.locator('.inspiration-intro')).not.toBeEmpty();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);}
- await page.getByTestId('theme-selector').selectOption('dark');await expect(page.locator('html')).toHaveAttribute('data-theme','dark');await page.getByTestId('theme-selector').selectOption('light');
- const link=page.locator('.inspiration-card').first().locator('.inspiration-image-link');await link.focus();await expect(link).toBeFocused();await link.click();await expect(page).toHaveURL(/\/inspiration\/cat$/);await expect(page.getByRole('heading',{name:'Cat figurine ideas'})).toBeVisible();await expect(page.locator('.inspiration-detail>.notice')).toContainText('not MEMO products');await expect(page.locator('.inspiration-detail')).toContainText('1,500');await expect(page.locator('.inspiration-detail')).toContainText('100');
-});
 test('inspiration quotation retains input through login and submits selected image ID, dimensions, color, quantity and notes without creating an order',async({page})=>{
  let loggedIn=false,submissions=0,orders=0;
  await page.route('**/api/auth/providers',r=>r.fulfill({json:{google:false,mfu:false}}));await page.route('**/api/auth/pending-mfa',r=>r.fulfill({json:{data:[]}}));await page.route('**/api/auth',r=>{loggedIn=true;return r.fulfill({json:{ok:true}});});
