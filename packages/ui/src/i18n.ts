@@ -3,6 +3,7 @@ import {carouselTranslations} from './carousel-i18n';
 import {catalogTranslations} from './catalog-i18n';
 import {inspirationTranslations} from './inspiration-i18n';
 import {modelGalleryTranslations} from './model-gallery-i18n';
+import {previewTranslations} from './preview-i18n';
 export const locales=['en','th','my','zh-CN'] as const;
 export type Locale=typeof locales[number];
 export const localeNames:Record<Locale,string>={en:'English',th:'ไทย',my:'မြန်မာ','zh-CN':'简体中文'};
@@ -334,6 +335,7 @@ export const catalog={
  ...carouselTranslations,
  ...inspirationTranslations,
  ...modelGalleryTranslations,
+ ...previewTranslations,
 } as const satisfies Record<string,readonly [string,string,string,string]>;
 export type TranslationKey=keyof typeof catalog;
 export const isLocale=(v:unknown):v is Locale=>locales.includes(v as Locale);
