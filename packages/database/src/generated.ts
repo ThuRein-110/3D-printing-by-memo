@@ -358,6 +358,47 @@ generation_settings: {Row:{
  concurrency?: number;
  updated_at?: string;
 };Relationships:[]};
+inspiration_images: {Row:{
+ id: string;
+ metadata: Json;
+ active: boolean;
+};Insert:{
+ id: string;
+ metadata: Json;
+ active?: boolean;
+};Update:{
+ id?: string;
+ metadata?: Json;
+ active?: boolean;
+};Relationships:[]};
+inspiration_inquiries: {Row:{
+ id: string;
+ owner_id: string;
+ request_key: string;
+ inspiration_id: string;
+ image_snapshot: Json;
+ customer: Json;
+ selection: Json;
+ created_at: string;
+};Insert:{
+ id?: string;
+ owner_id: string;
+ request_key: string;
+ inspiration_id: string;
+ image_snapshot: Json;
+ customer: Json;
+ selection: Json;
+ created_at?: string;
+};Update:{
+ id?: string;
+ owner_id?: string;
+ request_key?: string;
+ inspiration_id?: string;
+ image_snapshot?: Json;
+ customer?: Json;
+ selection?: Json;
+ created_at?: string;
+};Relationships:[]};
 inventory_reservations: {Row:{
  id: string;
  order_id: string;
@@ -1194,6 +1235,7 @@ configure_generation:{Args:{p_enabled:boolean;p_daily:number;p_monthly:number;p_
 enqueue_generation:{Args:{p_owner:string;p_file:string;p_request:string};Returns:string};
 start_generation:{Args:{p_job:string};Returns:boolean};
 retry_generation:{Args:{p_id:string};Returns:undefined};
+submit_inspiration_inquiry:{Args:{p_inspiration:string;p_request:string;p_customer:Json;p_selection:Json};Returns:string};
 publish_catalog_thumbnail:{Args:{p_model:string;p_asset:string;p_permission:string;p_note:string};Returns:undefined};
 submit_catalog_inquiry:{Args:{p_model:string;p_request:string;p_customer:Json;p_selection:Json};Returns:string};
 generation_metrics:{Args:Record<string,never>;Returns:Json};

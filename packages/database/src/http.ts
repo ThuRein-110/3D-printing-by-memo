@@ -15,6 +15,7 @@ import {generationApi} from './generation-api';
 import {errorCode} from './error-code';
 import {csrf} from './csrf';
 import {catalogPublic,catalogAdmin,selectedCatalog,catalogInquiries} from './catalog-api';
+import {inspirationInquiries} from './inspiration-api';
 import {adminOrderContext} from './order-context';
 import type {Row} from './generated';
 import type { Database } from './generated';
@@ -84,6 +85,7 @@ export async function handle(req:Request,path:string[],adminApp=false):Promise<R
  const ctx=adminApp?await requireAdmin():await requireUser();
  const {user,db}=ctx;const svc=serviceClient();
  if(route==='catalog-inquiries')return await catalogInquiries(req,{db,user},adminApp);
+ if(route==='inspiration-inquiries')return await inspirationInquiries(req,{db,user},adminApp);
  if(adminApp){const response=await catalogAdmin(req,path,{db,svc,user});if(response)return response;}
  if(path[0]==='catalog-order-image'&&req.method==='GET'){
   let query=db.from('model_order_snapshots').select('metadata').eq('quote_id',z.uuid().parse(path[1]));if(!adminApp)query=query.eq('owner_id',user.id);

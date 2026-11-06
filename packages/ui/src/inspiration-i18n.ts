@@ -1,0 +1,15 @@
+export const inspirationTranslations={
+ 'inspiration.title':['3D Printing Inspiration','แรงบันดาลใจงานพิมพ์ 3 มิติ','3D ပုံနှိပ် စိတ်ကူးများ','3D 打印灵感'],
+ 'inspiration.notice':['Licensed example images, not MEMO products or completed customer orders. Request an original custom design; image permission does not grant rights to reproduce the pictured design.','ภาพตัวอย่างที่มีสิทธิ์ใช้งาน ไม่ใช่สินค้า MEMO หรือผลงานลูกค้า ขอใบเสนอราคาออกแบบใหม่ได้ สิทธิ์ใช้ภาพไม่ได้ให้สิทธิ์ผลิตแบบในภาพ','လိုင်စင်ရ နမူနာပုံများဖြစ်ပြီး MEMO ပစ္စည်း သို့မဟုတ် ဖောက်သည်အော်ဒါများ မဟုတ်ပါ။ ကိုယ်ပိုင်ဒီဇိုင်းအတွက် ဈေးနှုန်းတောင်းနိုင်သည်။ ပုံလိုင်စင်သည် ပြထားသည့်ဒီဇိုင်းကို ကူးထုတ်ခွင့် မပေးပါ။','这些是已获许可的示例图片，并非 MEMO 产品或已完成的客户订单。可申请原创定制设计报价；图片许可不代表可以复制图中设计。'],
+ 'inspiration.example':['Inspiration example','ภาพตัวอย่างไอเดีย','စိတ်ကူး နမူနာ','灵感示例'],
+ 'inspiration.request':['Request custom design quotation','ขอใบเสนอราคาออกแบบเฉพาะ','စိတ်ကြိုက်ဒီဇိုင်း ဈေးနှုန်းတောင်းရန်','申请定制设计报价'],
+ 'inspiration.requests':['Custom design inspiration requests','คำขอออกแบบจากภาพตัวอย่าง','စိတ်ကူးပုံဖြင့် ဒီဇိုင်းတောင်းဆိုချက်များ','灵感定制设计申请'],
+ 'inspiration.changes':['Resized, converted to WebP; display may be cropped. Image adaptations retain the linked license.','ปรับขนาดและแปลงเป็น WebP อาจครอบตัดเพื่อแสดงผล ภาพดัดแปลงใช้สัญญาอนุญาตตามลิงก์','အရွယ်လျှော့၍ WebP ပြောင်းထားပြီး ပြသရာတွင် ဖြတ်တောက်နိုင်သည်။ ပြင်ဆင်ပုံများတွင် လင့်ခ်ပါလိုင်စင် ဆက်လက်သက်ရောက်သည်။','已缩放并转换为 WebP，显示时可能裁切。修改后的图片沿用链接中的许可。'],
+ 'inspiration.review':['Your request goes to MEMO for design, rights and feasibility review. It does not create an order or guarantee reproduction of this example.','ส่งคำขอให้ MEMO ตรวจสอบการออกแบบ สิทธิ์ และความเป็นไปได้ ยังไม่ใช่คำสั่งซื้อหรือการรับประกันว่าจะผลิตตามภาพได้','MEMO က ဒီဇိုင်း၊ အသုံးပြုခွင့်နှင့် ထုတ်လုပ်နိုင်မှုကို စစ်ဆေးပါမည်။ အော်ဒါ မဖြစ်သေးဘဲ နမူနာအတိုင်း ကူးထုတ်ပေးရန် အာမခံခြင်း မရှိပါ။','申请将交由 MEMO 审查设计、权利和可行性。此操作不会创建订单，也不保证复制该示例。'],
+ 'inspiration.cat':['Cat figurine ideas','ไอเดียตุ๊กตาแมว','ကြောင်ရုပ် စိတ်ကူးများ','猫咪摆件灵感'],
+ 'inspiration.keychain':['Colorful keychain ideas','ไอเดียพวงกุญแจสีสันสดใส','ရောင်စုံ သော့ချိတ်စိတ်ကူးများ','彩色钥匙扣灵感'],
+ 'inspiration.vase':['Sculptural vase ideas','ไอเดียแจกันรูปทรงศิลป์','အနုပညာ ပန်းအိုးစိတ်ကူးများ','雕塑花瓶灵感'],
+ 'inspiration.flowers':['Decorative flower ideas','ไอเดียดอกไม้ตกแต่ง','အလှဆင် ပန်းစိတ်ကူးများ','装饰花卉灵感'],
+ 'inspiration.gears':['Engineering gear ideas','ไอเดียเฟืองวิศวกรรม','အင်ဂျင်နီယာ ဂီယာစိတ်ကူးများ','工程齿轮灵感'],
+ 'inspiration.mechanism':['Interlocking mechanism ideas','ไอเดียกลไกเชื่อมประสาน','ချိတ်ဆက်ယန္တရား စိတ်ကူးများ','联动机构灵感'],
+} as const;

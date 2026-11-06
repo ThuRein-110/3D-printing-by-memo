@@ -46,3 +46,6 @@ Existing production URLs: **not supplied or verified in this checkout**. See [pr
 Model catalog and current pricing: [catalog rollout and licensing](docs/model-catalog.md). Basic printing starts at THB 100; custom design plus printing starts at THB 1,500.
 
 Customer authentication, MFU verification and student offers: [setup and security guide](docs/customer-auth.md).
+
+
+The licensed **3D Printing Inspiration** gallery, image credits and custom-design request workflow are documented in [docs/inspiration-gallery.md](docs/inspiration-gallery.md). The 16 unlicensed Creality references remain private.
