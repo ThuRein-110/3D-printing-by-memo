@@ -1,4 +1,5 @@
 import 'server-only';
+import {thumbnailAllowed,thumbnailStatus,storedCatalogImage,catalogImageResponse} from './catalog-images';
 import {randomUUID} from 'node:crypto';
 import sharp from 'sharp';
 import {z} from 'zod';
@@ -19,7 +20,7 @@ async function previewAsset(db:DB,id:string,publicPreview=false){
  const bytes=new ArrayBuffer(mesh.positions.length*4),view=new DataView(bytes);mesh.positions.forEach((value,index)=>view.setFloat32(index*4,value,true));
  return new Response(bytes,{headers:{'Content-Type':'application/vnd.memo.mesh','Cache-Control':publicPreview?'public,max-age=60':'private,no-store','X-Content-Type-Options':'nosniff'}});
 }
-export const publicModel=(m:Row<'catalog_models'>)=>({id:m.id,name:m.name,description:m.description,source_kind:m.source_kind,source_url:m.source_url,creator:m.creator,creator_url:m.creator_url,category:m.category,tags:m.tags,license_name:m.license_name,license_url:m.license_url,commercial_allowed:m.commercial_allowed,available:m.available,starting_price:m.starting_price,lead_time_days:m.lead_time_days,referenceOnly:m.showcase_visible,hasPreview:!!m.mesh_asset_id&&m.preview_allowed,imageUrl:m.image_asset_id?`/api/public/catalog/${m.id}/image`:null});
+export const publicModel=(m:Row<'catalog_models'>)=>({id:m.id,name:m.name,description:m.description,source_kind:m.source_kind,source_url:m.source_url,creator:m.creator,creator_url:m.creator_url,category:m.category,tags:m.tags,license_name:m.license_name,license_url:m.license_url,commercial_allowed:m.commercial_allowed,available:m.available,starting_price:m.starting_price,lead_time_days:m.lead_time_days,referenceOnly:m.showcase_visible,hasPreview:!!m.mesh_asset_id&&m.preview_allowed,thumbnailStatus:thumbnailStatus(m),imagePermissionRecorded:m.image_permission.trim().length>=20,imageUrl:thumbnailAllowed(m)?`/api/public/catalog/${m.id}/image?v=${m.image_asset_id}`:null});
 export async function selectedCatalog(db:DB,id:string){
  const {data,error}=await db.from('catalog_models').select('*').eq('id',id).eq('visible',true).eq('commercial_allowed',true).eq('license_approved',true).eq('printability','approved').single();
  if(error||!data)throw new Error('Catalog model unavailable');return data;
@@ -41,11 +42,7 @@ export async function catalogPublic(req:Request,path:string[]):Promise<Response|
  }
  const {data:m,error:lookupError}=await db.from('catalog_models').select('*').eq('id',z.uuid().parse(path[2])).or('showcase_visible.eq.true,and(visible.eq.true,commercial_allowed.eq.true,license_approved.eq.true,printability.eq.approved)').single();if(lookupError||!m)throw new Error('Catalog model unavailable');
  if(!path[3])return json({data:publicModel(m)});
- if(path[3]==='image'&&m.image_asset_id){
-  const {data:a}=await db.from('catalog_assets').select('*').eq('id',m.image_asset_id).eq('kind','image').single();if(!a)throw new Error('File unavailable');
-  const {data:blob,error}=await db.storage.from('catalog-private').download(a.path);if(error||!blob)throw new Error('File unavailable');
-  return new Response(await blob.arrayBuffer(),{headers:{'Content-Type':'image/jpeg','Cache-Control':'public,max-age=60','X-Content-Type-Options':'nosniff'}});
- }
+ if(path[3]==='image')return thumbnailAllowed(m)?catalogImageResponse(db,m.image_asset_id!,true):new Response(null,{status:404});
  if(path[3]==='preview'&&m.preview_allowed&&m.mesh_asset_id){
   return previewAsset(db,m.mesh_asset_id,true);
  }
@@ -53,6 +50,12 @@ export async function catalogPublic(req:Request,path:string[]):Promise<Response|
 }
 export async function catalogAdmin(req:Request,path:string[],ctx:{db:DB;svc:DB;user:{id:string}}):Promise<Response|undefined>{
  if(path[0]!=='catalog')return;
+ if(path[1]==='assets'&&path[2]&&path[3]==='image'&&req.method==='GET')return catalogImageResponse(ctx.svc,z.uuid().parse(path[2]));
+ if(path[1]&&path[2]==='thumbnail'&&req.method==='POST'){
+  const p=z.object({assetId:z.uuid(),permission:z.string().trim().min(20).max(4000),reviewNote:z.string().trim().min(1).max(4000)}).parse(JSON.parse(new TextDecoder().decode(await readLimited(req,32000))));
+  if(!await storedCatalogImage(ctx.svc,p.assetId))throw new Error('Uploaded image unavailable');
+  const result=await ctx.db.rpc('publish_catalog_thumbnail',{p_model:z.uuid().parse(path[1]),p_asset:p.assetId,p_permission:p.permission,p_note:p.reviewNote});if(result.error)throw new Error('Thumbnail publication failed');return json({ok:true});
+ }
  if(path[1]==='assets'&&path[2]&&path[3]==='preview'&&req.method==='GET')return previewAsset(ctx.svc,z.uuid().parse(path[2]));
  if(path[1]==='assets'&&req.method==='POST'){
   if(Number(req.headers.get('content-length')??0)>MAX_UPLOAD+65536)throw new Error('File too large');
@@ -74,6 +77,7 @@ export async function catalogAdmin(req:Request,path:string[],ctx:{db:DB;svc:DB;u
  }
  if(req.method==='POST'){
   const payload=z.object({id:z.uuid().optional(),values:catalogSchema,confirmed:z.literal(true)}).parse(JSON.parse(new TextDecoder().decode(await readLimited(req,32000))));
+  if(payload.values.image_asset_id&&(payload.values.visible||payload.values.showcase_visible)&&!await storedCatalogImage(ctx.svc,payload.values.image_asset_id))throw new Error('Uploaded image unavailable');
   const {data,error}=await ctx.db.rpc('save_catalog_model',{p_id:payload.id??randomUUID(),p_values:JSON.parse(JSON.stringify(payload.values))});if(error)throw new Error('Catalog approval failed');return json({id:data});
  }
 }

@@ -23,3 +23,5 @@ Admins review the latest 100 inquiries in **Models**, alongside the existing cat
 ## Checks
 
 Unit/database checks cover image permission requirements, admin MFA, reference non-orderability, immutable server-built inquiry snapshots, identity mapping, extra-field stripping, idempotency, RLS, anonymous access and invalid/hidden-model inquiries. Desktop/mobile browser checks cover stable card dimensions/loading height, long text, dark mode/four languages, arrows, keyboard, horizontal trackpad and Shift+wheel, touch swipe, lazy/broken images, dialog Escape/focus, local detail navigation and form retention through authentication. Test images are synthetic fixtures, not shop listings or creator assets. Connected production thumbnail display remains dependent on real authorization and an admin-supplied image.
+
+Detailed missing-image investigation and per-model status: [thumbnail investigation](thumbnail-investigation.md). The dedicated licensed-thumbnail action on an existing admin model page validates and attaches stored image bytes atomically; a private preview shows the actual uploaded JPEG.

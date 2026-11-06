@@ -1194,6 +1194,7 @@ configure_generation:{Args:{p_enabled:boolean;p_daily:number;p_monthly:number;p_
 enqueue_generation:{Args:{p_owner:string;p_file:string;p_request:string};Returns:string};
 start_generation:{Args:{p_job:string};Returns:boolean};
 retry_generation:{Args:{p_id:string};Returns:undefined};
+publish_catalog_thumbnail:{Args:{p_model:string;p_asset:string;p_permission:string;p_note:string};Returns:undefined};
 submit_catalog_inquiry:{Args:{p_model:string;p_request:string;p_customer:Json;p_selection:Json};Returns:string};
 generation_metrics:{Args:Record<string,never>;Returns:Json};
 save_catalog_model:{Args:{p_id:string;p_values:Json};Returns:string};

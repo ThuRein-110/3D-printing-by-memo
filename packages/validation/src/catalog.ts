@@ -14,6 +14,7 @@ export const catalogSchema=z.object({
  starting_price:z.number().min(100).max(1000000).nullable(),lead_time_days:z.number().int().min(1).max(365).nullable(),
  image_permission:z.string().trim().max(4000).default(''),review_note:z.string().trim().min(1).max(4000),showcase_visible:z.boolean().default(false)
 }).superRefine((v,ctx)=>{
+ if(v.image_asset_id&&(v.visible||v.showcase_visible)&&v.image_permission.length<20)ctx.addIssue({code:'custom',message:'Image permission evidence required',path:['image_permission']});
  if(v.source_kind==='creality'){try{safeSourceUrl(v.source_url,true);}catch{ctx.addIssue({code:'custom',message:'Invalid Creality Cloud model detail URL',path:['source_url']});}}
  if(v.visible&&(!v.commercial_allowed||!v.license_approved||v.printability!=='approved'))ctx.addIssue({code:'custom',message:'Commercial license and printability approval required',path:['visible']});
  if(v.source_kind==='owned'&&v.visible&&!v.mesh_asset_id)ctx.addIssue({code:'custom',message:'Shop-owned model file required',path:['mesh_asset_id']});
