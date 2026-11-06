@@ -1,6 +1,6 @@
 # Customer authentication and MFU student offers
 
-Both apps use the same Supabase project. Migrations `202611060012` and `202611060013` are additive. Never reset or replace production Auth users, quotes or orders.
+Both apps use the same Supabase project. Migrations `202611060012` through `202611060014` are additive. Never reset or replace production Auth users, quotes or orders.
 
 Customer routes: `/login`, `/register`, `/forgot-password`, `/account/security`. MFA-authorized admins manage accounts, verification expiry/revocation/restoration, security summaries and discount rules in **Customers** and **Promotions**. The initial 10% offer is deliberately inactive until an admin reviews and activates it. Basic printing starts at THB100 and custom design plus printing at THB1,500; discounts cannot reduce service floors. Existing values/history remain intact.
 
