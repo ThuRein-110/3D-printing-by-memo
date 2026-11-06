@@ -14,6 +14,9 @@ it('returns a safe validation error instead of an unhandled route rejection',asy
  const r=await handle(post({...payload,selection:{...payload.selection,quantity:0}}),['catalog-inquiries']);expect(r.status).toBe(400);expect(mocks.rpc).not.toHaveBeenCalled();
  mocks.rpc.mockResolvedValue({data:null,error:{message:'Rate limit exceeded'}});const limited=await handle(post(payload),['catalog-inquiries']);expect(limited.status).toBe(400);expect(await limited.json()).toMatchObject({errorCode:'limit'});
 });
+it('accepts the full multilingual note allowance within the bounded body limit',async()=>{
+ const notes='\u1000'.repeat(4000),r=await handle(post({...payload,selection:{...payload.selection,notes}}),['catalog-inquiries']);expect(r.status).toBe(200);expect(mocks.rpc.mock.calls[0][1].p_selection.notes).toHaveLength(4000);
+});
 it('requires login and a matching trusted origin before any inquiry can reach the database',async()=>{
  const foreign=await handle(post(payload,'https://evil.test'),['catalog-inquiries']);expect(foreign.status).toBe(403);expect(mocks.rpc).not.toHaveBeenCalled();mocks.requireUser.mockRejectedValue(new Error('Authentication required'));const anonymous=await handle(post(payload),['catalog-inquiries']);expect(anonymous.status).toBe(401);expect(mocks.rpc).not.toHaveBeenCalled();
 });
