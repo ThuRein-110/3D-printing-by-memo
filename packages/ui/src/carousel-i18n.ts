@@ -1,0 +1,16 @@
+export const carouselTranslations={
+ 'carousel.count':['{count} models loaded','โหลดแล้ว {count} โมเดล','မော်ဒယ် {count} ခု ဖွင့်ပြီး','已加载{count}个模型'],
+ 'carousel.region':['carousel','แถบเลื่อน','လျှောစာရင်း','轮播'],
+ 'carousel.previous':['Previous models','โมเดลก่อนหน้า','ရှေ့မော်ဒယ်များ','上一组模型'],
+ 'carousel.next':['Next models','โมเดลถัดไป','နောက်မော်ဒယ်များ','下一组模型'],
+ 'carousel.instructions':['Model carousel. Use arrow keys to scroll, or swipe.','แถบโมเดล ใช้ปุ่มลูกศรหรือปัดเพื่อเลื่อน','မော်ဒယ်စာရင်းကို မြားခလုတ် သို့မဟုတ် ပွတ်ဆွဲ၍ ကြည့်ပါ။','模型轮播。使用方向键或滑动浏览。'],
+ 'carousel.noImage':['Image not authorized or unavailable','ยังไม่ได้รับอนุญาตให้ใช้ภาพหรือไม่มีภาพ','ပုံအသုံးပြုခွင့် မရှိသေး သို့မဟုတ် ပုံမရရှိပါ','图片未获授权或不可用'],
+ 'carousel.inquiryOnly':['Reference · Inquiry only','อ้างอิง · สอบถามเท่านั้น','ရည်ညွှန်း · မေးမြန်းရန်သာ','参考 · 仅供咨询'],
+ 'carousel.inquiry':['Send model inquiry','ส่งคำถามเกี่ยวกับโมเดล','မော်ဒယ်အကြောင်း မေးမြန်းရန်','发送模型咨询'],
+ 'carousel.inquiryNote':['This is an inquiry, not a print order. Commercial permission, feasibility and a quotation must be reviewed before ordering.','นี่คือการสอบถาม ไม่ใช่คำสั่งพิมพ์ ต้องตรวจสอบสิทธิ์เชิงพาณิชย์ ความเป็นไปได้ และใบเสนอราคาก่อนสั่งผลิต','ဤသည်မှာ မေးမြန်းမှုသာဖြစ်ပြီး ပရင့်အော်ဒါ မဟုတ်ပါ။ စီးပွားဖြစ်ခွင့်၊ ထုတ်လုပ်နိုင်မှုနှင့် ဈေးနှုန်းကို စစ်ဆေးပြီးမှ မှာယူနိုင်သည်။','此为咨询，并非打印订单。下单前须审核商业许可、可行性和报价。'],
+ 'carousel.received':['Inquiry received for review. Reference:','ได้รับคำถามเพื่อพิจารณาแล้ว เลขอ้างอิง:','စစ်ဆေးရန် မေးမြန်းမှု လက်ခံရရှိပါပြီ။ အမှတ်:','咨询已提交审核。编号：'],
+ 'carousel.inquiries':['Model inquiries awaiting review','คำถามเกี่ยวกับโมเดลที่รอพิจารณา','စစ်ဆေးရန် မော်ဒယ်မေးမြန်းမှုများ','待审核模型咨询'],
+ 'carousel.imagePermission':['Public thumbnail permission citation (creator authorization or image license and permitted use)','หลักฐานอนุญาตภาพขนาดย่อที่เผยแพร่ได้ (สิทธิ์จากผู้สร้างหรือสัญญาอนุญาตภาพและขอบเขตการใช้)','အများသိနိုင်သော ပုံခွင့်ပြုချက် (ဖန်တီးသူခွင့်ပြုမှု သို့မဟုတ် ပုံလိုင်စင်နှင့် အသုံးပြုခွင့်)','可公开的缩略图授权依据（创作者授权或图片许可及使用范围）'],
+ 'carousel.imagePreview':['Preview authorized image','ดูภาพที่ได้รับอนุญาต','ခွင့်ပြုထားသောပုံ ကြည့်ရန်','预览已授权图片'],
+ 'carousel.close':['Close image preview','ปิดตัวอย่างภาพ','ပုံကြည့်ရှုမှု ပိတ်ရန်','关闭图片预览'],
+} as const;

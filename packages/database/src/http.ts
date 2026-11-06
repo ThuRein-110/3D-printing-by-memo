@@ -14,7 +14,7 @@ import {customerQuote,customerJob,customerEstimate} from './customer-data';
 import {generationApi} from './generation-api';
 import {errorCode} from './error-code';
 import {csrf} from './csrf';
-import {catalogPublic,catalogAdmin,selectedCatalog} from './catalog-api';
+import {catalogPublic,catalogAdmin,selectedCatalog,catalogInquiries} from './catalog-api';
 import {adminOrderContext} from './order-context';
 import type {Row} from './generated';
 import type { Database } from './generated';
@@ -83,6 +83,7 @@ export async function handle(req:Request,path:string[],adminApp=false):Promise<R
  }
  const ctx=adminApp?await requireAdmin():await requireUser();
  const {user,db}=ctx;const svc=serviceClient();
+ if(route==='catalog-inquiries')return await catalogInquiries(req,{db,user},adminApp);
  if(adminApp){const response=await catalogAdmin(req,path,{db,svc,user});if(response)return response;}
  if(path[0]==='catalog-order-image'&&req.method==='GET'){
   let query=db.from('model_order_snapshots').select('metadata').eq('quote_id',z.uuid().parse(path[1]));if(!adminApp)query=query.eq('owner_id',user.id);
@@ -92,7 +93,7 @@ export async function handle(req:Request,path:string[],adminApp=false):Promise<R
  }
  const generationResponse=await generationApi(req,route,{db,svc,user},adminApp,body);if(generationResponse)return generationResponse;
  if(adminApp&&route==='metrics'&&req.method==='GET'){const {data,error}=await db.rpc('operations_metrics');check(error);return json({data});}
- if(route==='export'&&req.method==='GET'){await rate('export:'+user.id,3,86400);const tables=['model_order_snapshots','customer_files','models','model_versions','quotes','orders','order_events','payments','notifications','preview_jobs'] as const;const entries=await Promise.all(tables.map(async table=>{const {data,error}=await (table==='quotes'?svc:db).from(table).select('*').eq('owner_id',user.id).limit(10000);check(error);return [table,table==='quotes'?data?.map(row=>customerQuote(row as Row<'quotes'>)):data] as const;}));return new Response(JSON.stringify({generated_at:new Date().toISOString(),owner_id:user.id,...Object.fromEntries(entries),note:'File bytes remain available through authenticated /api/files/{id}. Export capped at 10,000 rows per table; contact the shop if you need a larger archive.'}),{headers:{'Content-Type':'application/json','Content-Disposition':'attachment; filename="memo-data-export.json"','Cache-Control':'private, no-store'}});}
+ if(route==='export'&&req.method==='GET'){await rate('export:'+user.id,3,86400);const tables=['catalog_inquiries','model_order_snapshots','customer_files','models','model_versions','quotes','orders','order_events','payments','notifications','preview_jobs'] as const;const entries=await Promise.all(tables.map(async table=>{const {data,error}=await (table==='quotes'?svc:db).from(table).select('*').eq('owner_id',user.id).limit(10000);check(error);return [table,table==='quotes'?data?.map(row=>customerQuote(row as Row<'quotes'>)):data] as const;}));return new Response(JSON.stringify({generated_at:new Date().toISOString(),owner_id:user.id,...Object.fromEntries(entries),note:'File bytes remain available through authenticated /api/files/{id}. Export capped at 10,000 rows per table; contact the shop if you need a larger archive.'}),{headers:{'Content-Type':'application/json','Content-Disposition':'attachment; filename="memo-data-export.json"','Cache-Control':'private, no-store'}});}
  if(adminApp&&route==='reserve-inventory'&&req.method==='POST'){const p=z.object({orderId:z.uuid(),materialId:z.uuid(),grams:z.number().positive()}).parse(await body(req));const {error}=await db.rpc('reserve_inventory',{p_order:p.orderId,p_material:p.materialId,p_grams:p.grams});check(error);return json({ok:true});}
  if(adminApp&&route==='settle-inventory'&&req.method==='POST'){const p=z.object({id:z.uuid(),consume:z.boolean()}).parse(await body(req));const {error}=await db.rpc('settle_inventory',{p_reservation:p.id,p_consume:p.consume});check(error);return json({ok:true});}
  if(route==='files'&&req.method==='POST'){

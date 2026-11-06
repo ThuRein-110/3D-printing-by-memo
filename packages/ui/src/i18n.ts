@@ -1,4 +1,5 @@
 import {customerTranslations} from './customer-i18n';
+import {carouselTranslations} from './carousel-i18n';
 import {catalogTranslations} from './catalog-i18n';
 export const locales=['en','th','my','zh-CN'] as const;
 export type Locale=typeof locales[number];
@@ -328,6 +329,7 @@ export const catalog={
  'notice.final':['A final quotation is ready for your review.','ใบเสนอราคาสุดท้ายพร้อมให้คุณตรวจสอบแล้ว','နောက်ဆုံးဈေးနှုန်းလွှာကို စစ်ဆေးနိုင်ပါပြီ။','最终报价已准备好，请查看。'],
  ...catalogTranslations,
  ...customerTranslations,
+ ...carouselTranslations,
 } as const satisfies Record<string,readonly [string,string,string,string]>;
 export type TranslationKey=keyof typeof catalog;
 export const isLocale=(v:unknown):v is Locale=>locales.includes(v as Locale);

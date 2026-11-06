@@ -60,6 +60,34 @@ catalog_assets: {Row:{
  analysis?: Json | null;
  created_at?: string;
 };Relationships:[]};
+catalog_inquiries: {Row:{
+ id: string;
+ owner_id: string;
+ request_key: string;
+ model_id: string;
+ model_snapshot: Json;
+ customer: Json;
+ selection: Json;
+ created_at: string;
+};Insert:{
+ id?: string;
+ owner_id: string;
+ request_key: string;
+ model_id: string;
+ model_snapshot: Json;
+ customer: Json;
+ selection: Json;
+ created_at?: string;
+};Update:{
+ id?: string;
+ owner_id?: string;
+ request_key?: string;
+ model_id?: string;
+ model_snapshot?: Json;
+ customer?: Json;
+ selection?: Json;
+ created_at?: string;
+};Relationships:[]};
 catalog_models: {Row:{
  id: string;
  name: string;
@@ -86,6 +114,7 @@ catalog_models: {Row:{
  created_at: string;
  updated_at: string;
  showcase_visible: boolean;
+ image_permission: string;
 };Insert:{
  id?: string;
  name: string;
@@ -112,6 +141,7 @@ catalog_models: {Row:{
  created_at?: string;
  updated_at?: string;
  showcase_visible?: boolean;
+ image_permission?: string;
 };Update:{
  id?: string;
  name?: string;
@@ -138,6 +168,7 @@ catalog_models: {Row:{
  created_at?: string;
  updated_at?: string;
  showcase_visible?: boolean;
+ image_permission?: string;
 };Relationships:[]};
 customer_files: {Row:{
  id: string;
@@ -1163,6 +1194,7 @@ configure_generation:{Args:{p_enabled:boolean;p_daily:number;p_monthly:number;p_
 enqueue_generation:{Args:{p_owner:string;p_file:string;p_request:string};Returns:string};
 start_generation:{Args:{p_job:string};Returns:boolean};
 retry_generation:{Args:{p_id:string};Returns:undefined};
+submit_catalog_inquiry:{Args:{p_model:string;p_request:string;p_customer:Json;p_selection:Json};Returns:string};
 generation_metrics:{Args:Record<string,never>;Returns:Json};
 save_catalog_model:{Args:{p_id:string;p_values:Json};Returns:string};
 catalog_categories:{Args:Record<string,never>;Returns:Json};

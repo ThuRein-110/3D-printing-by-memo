@@ -77,3 +77,12 @@ export async function catalogAdmin(req:Request,path:string[],ctx:{db:DB;svc:DB;u
   const {data,error}=await ctx.db.rpc('save_catalog_model',{p_id:payload.id??randomUUID(),p_values:JSON.parse(JSON.stringify(payload.values))});if(error)throw new Error('Catalog approval failed');return json({id:data});
  }
 }
+
+export async function catalogInquiries(req:Request,ctx:{db:DB;user:{id:string}},admin:boolean){
+ if(req.method==='GET'){if(admin){const audit=await serviceClient().from('audit_logs').insert({actor_id:ctx.user.id,entity:'catalog_inquiries',action:'read_summary'});if(audit.error)throw new Error('Database operation failed');}const {data,error}=await ctx.db.from('catalog_inquiries').select('*').order('created_at',{ascending:false}).limit(100);if(error)throw new Error('Database operation failed');return json({data});}
+ if(req.method==='POST'&&!admin){
+  const p=z.object({modelId:z.uuid(),requestKey:z.uuid(),customer:z.object({name:z.string().trim().min(1).max(120),email:z.email().max(254)}),selection:z.object({dimensions:z.object({x:z.number().positive().max(260),y:z.number().positive().max(260),z:z.number().positive().max(260)}),color:z.enum(['black','white','grey']),quantity:z.number().int().min(1).max(100),notes:z.string().max(4000)})}).parse(JSON.parse(new TextDecoder().decode(await readLimited(req,10000))));
+  const {data,error}=await ctx.db.rpc('submit_catalog_inquiry',{p_model:p.modelId,p_request:p.requestKey,p_customer:p.customer,p_selection:p.selection});if(error)throw new Error(error.message.includes('Rate limit')?'Rate limit exceeded':'Inquiry could not be saved');return json({id:data});
+ }
+ return new Response(null,{status:405});
+}
