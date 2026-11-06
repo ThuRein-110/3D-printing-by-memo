@@ -2,7 +2,7 @@ export function customerOrigin(value=process.env.APP_ORIGIN){
  if(!value)throw new Error('Customer origin is not configured');
  const u=new URL(value);if(value.includes('*')||value.includes('\\')||u.username||u.password||u.search||u.hash||u.pathname!=='/'||!(u.protocol==='https:'||(u.protocol==='http:'&&['localhost','127.0.0.1'].includes(u.hostname))))throw new Error('Invalid customer origin');return u.origin;
 }
-export function eligibleStudentEmail(value:string){const email=value.trim().toLowerCase();return /^[a-z0-9.!#$%&'*+/=?^_`{|}~-]+@lamduan\.mfu\.ac\.th$/.test(email)&&!email.includes('..');}
+export function eligibleStudentEmail(value:string){const email=value.trim().toLowerCase();return /^[a-z0-9.!#$%&'*+/=?^_`{|}~-]+@lamduan\.mfu\.ac\.th$/.test(email)&&!email.includes('..')&&!email.split('@')[0].includes('+');}
 export function mfuProvider(env:NodeJS.ProcessEnv=process.env){
  if(env.MFU_SSO_AUTHORIZED!=='true')return null;
  if(env.MFU_SSO_KIND==='saml'&&/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(env.MFU_SSO_PROVIDER_ID??''))return {kind:'saml' as const,id:env.MFU_SSO_PROVIDER_ID!};

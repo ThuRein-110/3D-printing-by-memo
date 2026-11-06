@@ -4,7 +4,7 @@ import {authFetch} from '../packages/database/src/auth-fetch';
 afterEach(()=>vi.unstubAllGlobals());
 it('accepts only the institution-confirmed student domain with exact matching',()=>{
  expect(eligibleStudentEmail(' Student@lamduan.mfu.ac.th ')).toBe(true);
- for(const email of ['staff@mfu.ac.th','student@lamduan.mfu.ac.th.evil.test','student@evil.lamduan.mfu.ac.th','student@gmail.com','a..b@lamduan.mfu.ac.th'])expect(eligibleStudentEmail(email)).toBe(false);
+ for(const email of ['student+alias@lamduan.mfu.ac.th','staff@mfu.ac.th','student@lamduan.mfu.ac.th.evil.test','student@evil.lamduan.mfu.ac.th','student@gmail.com','a..b@lamduan.mfu.ac.th'])expect(eligibleStudentEmail(email)).toBe(false);
 });
 it('requires explicit university authorization and a configured broker adapter',()=>{
  expect(mfuProvider({MFU_SSO_KIND:'oidc',MFU_SSO_PROVIDER_ID:'custom:mfu'})).toBeNull();

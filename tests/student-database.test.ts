@@ -23,7 +23,7 @@ it('protects verification, raw logs, codes and rule writes with RLS and MFA',asy
  await user(admin);expect((await db.query('select * from public.student_discount_rules')).rows).toHaveLength(0);await user(admin,'aal2');await db.exec('update public.student_discount_rules set value=12');
 });
 it('rejects staff domains, duplicate identities and switching to evade usage limits',async()=>{
- await expect(verify(a,'staff@mfu.ac.th')).rejects.toThrow();await verify();await expect(verify(b)).rejects.toThrow('unique');await expect(verify(a,'different@lamduan.mfu.ac.th')).rejects.toThrow('administrator review');
+ await expect(verify(a,'student+alias@lamduan.mfu.ac.th')).rejects.toThrow('student_primary_email');await expect(verify(a,'staff@mfu.ac.th')).rejects.toThrow();await verify();await expect(verify(b)).rejects.toThrow('unique');await expect(verify(a,'different@lamduan.mfu.ac.th')).rejects.toThrow('administrator review');
 });
 it('enforces expiry, revocation, re-verification and genuine enrollment requirements',async()=>{
  await verify();expect((await price()).subtotal).toBe(900);await db.exec('update public.student_discount_rules set require_enrollment=true');expect((await price()).subtotal).toBe(1000);
