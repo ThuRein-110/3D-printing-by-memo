@@ -41,3 +41,7 @@ out/
 *.db
 .DS_Store
 Thumbs.db
+
+# Nested Supabase configuration workdirs
+**/supabase/.temp/
+**/supabase/.branches/
