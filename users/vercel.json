@@ -3,5 +3,6 @@
   "framework": "nextjs",
   "installCommand": "cd .. && pnpm install --frozen-lockfile",
   "buildCommand": "cd .. && pnpm exec turbo build --filter=@mfu/users",
-  "outputDirectory": ".next"
+  "outputDirectory": ".next",
+  "crons": [{"path":"/api/security-retention","schedule":"0 3 * * *"}]
 }

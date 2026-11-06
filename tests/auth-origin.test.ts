@@ -9,6 +9,7 @@ vi.mock('../packages/database/src/server',()=>({
  serviceClient:()=>({rpc:async()=>({data:true,error:null}),from:()=>({select:()=>({eq:()=>({maybeSingle:auth.role})})})}),
  requireAdmin:auth.requireAdmin,requireUser:vi.fn(),
 }));
+vi.mock('../packages/database/src/customer-security',()=>({securityEvent:vi.fn(),customerRate:vi.fn(),privateHash:()=> 'synthetic-network-hash'}));
 import {handle} from '@mfu/database/http.ts';
 
 const origin='https://3d-printing-by-memo-admin-pearl.vercel.app';

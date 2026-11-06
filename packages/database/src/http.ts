@@ -1,4 +1,6 @@
 import 'server-only';
+import {beginCustomerFlow,customerAuth} from './customer-auth';
+import {securityEvent,customerRate,privateHash} from './customer-security';
 import { createHash,randomUUID } from 'node:crypto';
 import sharp from 'sharp';
 import { z } from 'zod';
@@ -41,6 +43,7 @@ export async function handle(req:Request,path:string[],adminApp=false):Promise<R
  if(route==='health'){if(!configured())return json({backend:false,writes:false,provider:false});const db=await session();const {error}=await db.from('materials').select('id').limit(1);return json({backend:!error,writes:!!process.env.SUPABASE_SERVICE_ROLE_KEY,provider:process.env.PREVIEW_PROVIDER==='meshy'},error?503:200);}
  if(req.method!=='GET')csrf(req,adminApp);
  if(!configured())return json({error:'Supabase is not configured. No data has been saved.'},503);
+ const customerResponse=await customerAuth(req,path,adminApp);if(customerResponse)return customerResponse;
  const publicCatalog=await catalogPublic(req,path);if(publicCatalog)return publicCatalog;
  if(path[0]==='public'&&path[1]==='material-image'&&req.method==='GET'){
   const id=z.uuid().parse(path[2]),svc=serviceClient();const {data:material}=await svc.from('materials').select('image_file_id').eq('id',id).eq('visible',true).gt('available_grams',0).single();if(!material?.image_file_id)return json({error:'Not found'},404);
@@ -49,18 +52,20 @@ export async function handle(req:Request,path:string[],adminApp=false):Promise<R
   const bytes=await sharp(new Uint8Array(await blob.arrayBuffer()),{limitInputPixels:20_000_000}).rotate().resize(500,500,{fit:'inside',withoutEnlargement:true}).jpeg({quality:80}).toBuffer();return new Response(bytes,{headers:{'Content-Type':'image/jpeg','Cache-Control':'public, max-age=60','X-Content-Type-Options':'nosniff'}});
  }
  if(route==='auth' && req.method==='POST'){
-  const p=z.object({action:z.enum(['login','register','guest','guest-verify','logout','mfa-enroll','mfa-verify']),email:z.email().optional(),password:z.string().min(12).max(128).optional(),factorId:z.string().optional(),code:z.string().regex(/^\d{6}$/).optional()}).parse(await body(req));
-  const ipHash=createHash('sha256').update(req.headers.get('x-forwarded-for')??'unknown').digest('hex');await rate('auth:'+ipHash,20,900);
+  const p=z.object({action:z.enum(['login','register','guest','guest-verify','logout','mfa-enroll','mfa-verify']),email:z.email().optional(),password:z.string().min(12).max(128).optional(),factorId:z.string().optional(),code:z.string().regex(/^\d{6}(\d{2})?$/).optional()}).parse(await body(req));
+  const ipHash=privateHash(new Date().toISOString().slice(0,10)+':'+(req.headers.get('x-vercel-forwarded-for')??req.headers.get('x-forwarded-for')??'unknown'));await rate('auth:'+ipHash,20,900);
+  if(p.email)await customerRate(req,'login:'+p.email.toLowerCase(),10,900);
   const db=await session();
   if(p.action==='logout'){await db.auth.signOut();return json({ok:true});}
-  if(['guest','guest-verify'].includes(p.action)){if(adminApp||!p.email)throw new Error('Customer email required');const result=p.action==='guest'?await db.auth.signInWithOtp({email:p.email,options:{shouldCreateUser:true}}):await db.auth.verifyOtp({email:p.email,token:p.code!,type:'email'});check(result.error);return json({ok:true,verificationRequired:p.action==='guest'});}
+  if(['guest','guest-verify'].includes(p.action)){if(adminApp||!p.email)throw new Error('Customer email required');const result=p.action==='guest'?await db.auth.signInWithOtp({email:p.email,options:{shouldCreateUser:true,emailRedirectTo:await beginCustomerFlow()}}):await db.auth.verifyOtp({email:p.email,token:p.code!,type:'email'});if(result.error){await securityEvent(req,'login_failure',undefined,p.email);throw new Error('Authentication failed');}if(p.action==='guest-verify'&&result.data.user)await securityEvent(req,'login_success',result.data.user.id,p.email);return json({ok:true,verificationRequired:p.action==='guest'});}
   if(p.action==='register'&&adminApp)throw new Error('Admin registration is disabled');
-  if(p.action==='mfa-enroll'){const {data,error}=await db.auth.mfa.enroll({factorType:'totp'});check(error);return json(data);}
-  if(p.action==='mfa-verify'){const {data,error}=await db.auth.mfa.challengeAndVerify({factorId:p.factorId!,code:p.code!});check(error);return json({verified:!!data});}
+  if(p.action==='mfa-enroll'){await requireUser();const {data,error}=await db.auth.mfa.enroll({factorType:'totp'});check(error);return json(data);}
+  if(p.action==='mfa-verify'){if(!p.code||!/^\d{6}$/.test(p.code))throw new Error('Invalid MFA code');const mfaUser=await requireUser(true);const {data,error}=await db.auth.mfa.challengeAndVerify({factorId:p.factorId!,code:p.code!});if(error)await securityEvent(req,'login_failure',mfaUser.user.id,mfaUser.user.email);check(error);const current=await db.auth.getUser();if(current.data.user)await securityEvent(req,'mfa_verified',current.data.user.id);return json({verified:!!data});}
   if(!p.email||!p.password)throw new Error('Email and password required');
-  const {data,error}=p.action==='register'?await db.auth.signUp({email:p.email,password:p.password}):await db.auth.signInWithPassword({email:p.email,password:p.password});
-  if(error)return json({error:'Authentication failed. Check your details or confirm your email.'},400);
-  if(adminApp&&data.user){const {data:role}=await serviceClient().from('roles').select('role').eq('user_id',data.user.id).maybeSingle();if(role?.role!=='admin'){await db.auth.signOut();return json({error:'Admin access is not provisioned for this account.'},403);}const {data:factors}=await db.auth.mfa.listFactors();return json({ok:true,factors:factors?.totp??[],mfaRequired:true});}
+  const {data,error}=p.action==='register'?await db.auth.signUp({email:p.email,password:p.password,options:{emailRedirectTo:await beginCustomerFlow()}}):await db.auth.signInWithPassword({email:p.email,password:p.password});
+  if(error){await securityEvent(req,'login_failure',undefined,p.email);return json({error:'Authentication failed. Check your details or confirm your email.'},400);}
+  if(p.action==='login'&&data.user){await securityEvent(req,'login_success',data.user.id,p.email);if(!adminApp){const f=await db.auth.mfa.listFactors();if(f.error)throw new Error('Authentication failed');if(f.data?.totp.some(x=>x.status==='verified'))return json({ok:true,factors:f.data.totp.filter(x=>x.status==='verified'),mfaRequired:true});}}
+  if(adminApp&&data.user){const {data:role}=await serviceClient().from('roles').select('role').eq('user_id',data.user.id).maybeSingle();if(role?.role!=='admin'){await securityEvent(req,'login_failure',data.user.id,p.email);await db.auth.signOut();return json({error:'Admin access is not provisioned for this account.'},403);}const {data:factors}=await db.auth.mfa.listFactors();return json({ok:true,factors:factors?.totp??[],mfaRequired:true});}
   return json({ok:true,emailVerification:p.action==='register'&&!data.session});
  }
  if(route.startsWith('public/')&&req.method==='GET'){
@@ -159,7 +164,7 @@ export async function handle(req:Request,path:string[],adminApp=false):Promise<R
   const result=eligible?estimate(usage,rates,{kind:z.enum(['fixed','percentage']).parse(promotion.kind),value:Number(promotion.value),allowBelowCost:promotion.allow_below_cost&&!!promotion.authorization_note.trim()}):regular;
   const range=confidence.includes('approximate')?[Math.max(result.minimum,result.productionCost,result.total*0.7),Math.max(result.minimum,result.total*1.5)]:null;
   const details={confidence,range,assumptions:'PETG 1.27 g/cm³; 20% infill; 1.2 mm walls; 6 mm³/s. Supports, orientation and slicer review required.',ratesPublished:!!rule,ratesReviewed:rule?.reviewed??false,pricingRuleId:rule?.id??null,allowBelowCost:!!(eligible&&promotion.allow_below_cost&&promotion.authorization_note.trim())};
-  if(route==='estimate')return json({estimate:customerEstimate({...result,...details,promotion:eligible?promotion.name:null})});
+  if(route==='estimate'){const student=await svc.rpc('student_price',{p_owner:user.id,p_estimate:toJson({...result,...details,promotion:eligible?promotion.name:null}),p_snapshot:toJson(result.snapshot)});check(student.error);return json({estimate:customerEstimate(student.data)});}
   const id=randomUUID();const {data:savedId,error}=await svc.rpc('commit_quote',{p_record:{id,owner_id:user.id,request_key:p.idempotencyKey,service:p.service,configuration:p,snapshot:result.snapshot,estimate:{...result,...details,promotion:eligible?promotion.name:null},catalog_material:toJson(catalogMaterial),catalog_file:catalogFile},p_promo:eligible?promotion.id:null,p_regular:{...regular,...details,allowBelowCost:false,range:confidence.includes('approximate')?[Math.max(regular.minimum,regular.productionCost,regular.total*.7),Math.max(regular.minimum,regular.total*1.5)]:null}});
   if(error){const {data:retry}=await svc.from('quotes').select('id').eq('owner_id',user.id).eq('request_key',p.idempotencyKey).maybeSingle();if(retry)return json({id:retry.id});check(error);}
   return json({id:savedId});

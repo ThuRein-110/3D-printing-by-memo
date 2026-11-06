@@ -182,6 +182,31 @@ customer_files: {Row:{
  purpose?: string;
  source_job_id?: string | null;
 };Relationships:[]};
+customer_security_events: {Row:{
+ id: string;
+ owner_id: string | null;
+ kind: string;
+ subject_hash: string | null;
+ network_hash: string | null;
+ suspicious: boolean;
+ created_at: string;
+};Insert:{
+ id?: string;
+ owner_id?: string | null;
+ kind: string;
+ subject_hash?: string | null;
+ network_hash?: string | null;
+ suspicious?: boolean;
+ created_at?: string;
+};Update:{
+ id?: string;
+ owner_id?: string | null;
+ kind?: string;
+ subject_hash?: string | null;
+ network_hash?: string | null;
+ suspicious?: boolean;
+ created_at?: string;
+};Relationships:[]};
 customers: {Row:{
  id: string;
  owner_id: string;
@@ -987,6 +1012,140 @@ settings: {Row:{
  value?: Json;
  created_at?: string;
 };Relationships:[]};
+student_challenges: {Row:{
+ owner_id: string;
+ email: string;
+ code_hash: string;
+ expires_at: string;
+ attempts: number;
+};Insert:{
+ owner_id: string;
+ email: string;
+ code_hash: string;
+ expires_at: string;
+ attempts?: number;
+};Update:{
+ owner_id?: string;
+ email?: string;
+ code_hash?: string;
+ expires_at?: string;
+ attempts?: number;
+};Relationships:[]};
+student_discount_redemptions: {Row:{
+ quote_id: string;
+ rule_id: string;
+ verification_id: string;
+ created_at: string;
+};Insert:{
+ quote_id: string;
+ rule_id: string;
+ verification_id: string;
+ created_at?: string;
+};Update:{
+ quote_id?: string;
+ rule_id?: string;
+ verification_id?: string;
+ created_at?: string;
+};Relationships:[]};
+student_discount_rules: {Row:{
+ id: string;
+ name: string;
+ kind: string;
+ value: number;
+ active: boolean;
+ starts_at: string;
+ ends_at: string;
+ minimum_total: number;
+ usage_limit: number | null;
+ per_identity_limit: number;
+ stack_early_bird: boolean;
+ minimum_profit: number;
+ minimum_margin: number;
+ require_enrollment: boolean;
+ reverify_days: number;
+ created_at: string;
+};Insert:{
+ id?: string;
+ name?: string;
+ kind?: string;
+ value?: number;
+ active?: boolean;
+ starts_at?: string;
+ ends_at?: string;
+ minimum_total?: number;
+ usage_limit?: number | null;
+ per_identity_limit?: number;
+ stack_early_bird?: boolean;
+ minimum_profit?: number;
+ minimum_margin?: number;
+ require_enrollment?: boolean;
+ reverify_days?: number;
+ created_at?: string;
+};Update:{
+ id?: string;
+ name?: string;
+ kind?: string;
+ value?: number;
+ active?: boolean;
+ starts_at?: string;
+ ends_at?: string;
+ minimum_total?: number;
+ usage_limit?: number | null;
+ per_identity_limit?: number;
+ stack_early_bird?: boolean;
+ minimum_profit?: number;
+ minimum_margin?: number;
+ require_enrollment?: boolean;
+ reverify_days?: number;
+ created_at?: string;
+};Relationships:[]};
+student_verification_audit: {Row:{
+ id: string;
+ owner_id: string;
+ actor_id: string | null;
+ action: string;
+ created_at: string;
+};Insert:{
+ id?: string;
+ owner_id: string;
+ actor_id?: string | null;
+ action: string;
+ created_at?: string;
+};Update:{
+ id?: string;
+ owner_id?: string;
+ actor_id?: string | null;
+ action?: string;
+ created_at?: string;
+};Relationships:[]};
+student_verifications: {Row:{
+ id: string;
+ owner_id: string;
+ method: string;
+ verified_email: string;
+ verified_at: string;
+ expires_at: string;
+ enrollment_status: string | null;
+ revoked_at: string | null;
+};Insert:{
+ id?: string;
+ owner_id: string;
+ method: string;
+ verified_email: string;
+ verified_at?: string;
+ expires_at: string;
+ enrollment_status?: string | null;
+ revoked_at?: string | null;
+};Update:{
+ id?: string;
+ owner_id?: string;
+ method?: string;
+ verified_email?: string;
+ verified_at?: string;
+ expires_at?: string;
+ enrollment_status?: string | null;
+ revoked_at?: string | null;
+};Relationships:[]};
 };Views:Record<string,never>;Functions:{
 is_admin:{Args:Record<string,never>;Returns:boolean};
 take_rate_limit:{Args:{p_key:string;p_limit:number;p_seconds:number};Returns:boolean};
@@ -1008,5 +1167,11 @@ generation_metrics:{Args:Record<string,never>;Returns:Json};
 save_catalog_model:{Args:{p_id:string;p_values:Json};Returns:string};
 catalog_categories:{Args:Record<string,never>;Returns:Json};
 browse_catalog:{Args:{p_seed:string;p_page?:number;p_query?:string;p_category?:string;p_min?:number|null;p_max?:number|null};Returns:Json};
+customer_session_active:{Args:{p_session:string;p_owner:string};Returns:boolean};
+verify_student:{Args:{p_owner:string;p_email:string;p_method?:string;p_enrollment?:string|null;p_expires?:string|null};Returns:undefined};
+consume_student_challenge:{Args:{p_owner:string;p_hash:string};Returns:string|null};
+student_price:{Args:{p_owner:string;p_estimate:Json;p_snapshot:Json;p_reserve?:boolean;p_quote?:string|null};Returns:Json};
+prune_customer_security:{Args:Record<string,never>;Returns:undefined};
+revoke_student:{Args:{p_id:string;p_restore?:boolean};Returns:undefined};
 };Enums:{order_status:OrderStatus};CompositeTypes:Record<string,never>}};
 export type Row<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Row'];

@@ -1,0 +1,5 @@
+project_id = "3d-printing-mfu-production-auth"
+# Deliberately partial: config push leaves undeclared settings unchanged.
+[auth]
+site_url = "https://3d-printing-by-memo-mfu-two.vercel.app"
+additional_redirect_urls = ["https://3d-printing-by-memo-mfu-two.vercel.app/api/auth/callback"]
