@@ -2,7 +2,7 @@
 
 The public customer homepage now focuses on four things: services/starting prices, how quoting and ordering work, a credited gallery, and contact. The model-search/chip section and its coming-soon cat state are removed from the homepage. Public navigation links only to these four sections. `/models` redirects to `/gallery` so the previous catalogue index is no longer a public browsing entry point.
 
-The design uses neutral black/white/grey theme tokens in light, dark and system modes, with English, Thai, Myanmar and Simplified Chinese. The provided logo and gallery photographs retain their original colors. The cartoon cat is replaced by the supplied logo in the header/footer, with the same logo featured on the homepage.
+The customer site defaults to graphite dark mode with coral accents. Light and system themes remain available alongside English, Thai, Myanmar and Simplified Chinese. The supplied logo appears in the header and footer. The hero uses an AI-generated illustration of a filament-printed knot, and the gallery retains the existing licensed photographs. Space Grotesk and DM Sans are served locally. Entrance, scroll and hover effects respect the visitor’s reduced-motion preference.
 
 ## Brand asset and contact source
 
@@ -20,6 +20,6 @@ The gallery uses the six existing licensed reference photographs, with creator, 
 
 Customer-facing calls to action lead to the contact section, the Facebook business page or the supplied telephone number. Existing account/order/configurator URLs, admin operations, authorization, database records and pricing APIs are preserved for existing workflows; they are not advertised in the new public brochure navigation. No database migration or new environment variable is needed.
 
-Verification covers exact logo copies, real browser image decoding, correct contact URLs, absence of the withdrawn marketplace section, redirected catalogue index, four languages, neutral themes, responsive layouts and keyboard image dialogs. Earlier marketplace UI tests are replaced with brochure behavior tests; database, ownership, quotation and legacy detail-flow tests remain active.
+Verification covers exact logo copies, browser image decoding, contact URLs, the catalogue redirect, four languages, theme persistence, reduced motion, responsive layouts and keyboard image dialogs.
 
-Local validation passed 150 unit/API/database tests, 42 browser tests (two existing non-production connected-order tests skipped), lint, TypeScript, dependency audit and both production builds. After final copy refinements, all eight focused desktop/mobile brochure cases passed again. Light, dark and mobile layouts were also visually inspected in real browser captures.
+The dark-theme refresh passed 150 unit/API/database tests, 44 browser tests, TypeScript and both production builds. Two connected-order tests require a configured non-production Supabase project and were skipped. All ten focused brochure tests passed after the final mobile header adjustment.

@@ -1,1 +1,1 @@
-export const BOOTSTRAP=`(()=>{try{let p=document.cookie.split('; ').find(v=>v.startsWith('memo-theme='))?.split('=')[1]||localStorage.getItem('memo.theme')||'system';if(!['light','dark','system'].includes(p))p='system';document.documentElement.dataset.theme=p==='system'?(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):p;}catch{}})();`;
+export const BOOTSTRAP=`(()=>{const root=document.documentElement;if(root.dataset.theme==='system')root.dataset.theme=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';})();`;

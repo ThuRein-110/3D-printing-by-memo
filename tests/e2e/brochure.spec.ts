@@ -14,8 +14,33 @@ test('gallery loads actual licensed local images, shows attribution, and support
  await page.goto('/gallery?lang=en');for(const card of await page.locator('.brochure-gallery-card').all()){await card.scrollIntoViewIfNeeded();await expect(card.locator('[data-image-state=loaded]')).toBeVisible();expect(await card.locator('img').evaluate((i:HTMLImageElement)=>i.complete&&i.naturalWidth>0)).toBe(true);await expect(card.locator('a[rel*=license]')).toHaveAttribute('href',/creativecommons.org/);}
  await expect(page.locator('.brochure-section-heading')).toContainText('not MEMO products or completed customer orders');const preview=page.locator('.brochure-image-button').first();await preview.focus();await expect(preview).toBeFocused();await page.keyboard.press('Enter');await expect(page.locator('dialog')).toBeVisible();await expect(page.locator('dialog [data-image-state=loaded]')).toBeVisible();await expect(page.locator('dialog .inspiration-credit')).toContainText('Sumanbargavr');await page.keyboard.press('Escape');await expect(page.locator('dialog')).not.toBeVisible();await expect(preview).toBeFocused();await expect(page.locator('a[href*="/inspiration/"]')).toHaveCount(0);
 });
-test('black and white light/dark/system themes and all four languages fit desktop, tablet and mobile',async({page})=>{
- await page.goto('/?lang=en');await page.getByTestId('theme-selector').selectOption('light');await expect.poll(()=>page.evaluate(()=>getComputedStyle(document.body).backgroundColor)).toBe('rgb(250, 250, 250)');await page.getByTestId('theme-selector').selectOption('dark');await expect.poll(()=>page.evaluate(()=>getComputedStyle(document.body).backgroundColor)).toBe('rgb(16, 16, 16)');
+test('dark is the customer default and all themes and languages fit desktop, tablet and mobile',async({page})=>{
+ await page.emulateMedia({colorScheme:'light'});
+ await page.goto('/?lang=en');
+ await expect(page.getByTestId('theme-selector')).toHaveValue('dark');
+ await expect.poll(()=>page.evaluate(()=>getComputedStyle(document.body).backgroundColor)).toBe('rgb(17, 17, 19)');
+ await page.getByTestId('theme-selector').selectOption('light');
+ await expect.poll(()=>page.evaluate(()=>getComputedStyle(document.body).backgroundColor)).toBe('rgb(248, 246, 243)');
+ await page.reload();
+ await expect(page.getByTestId('theme-selector')).toHaveValue('light');
  for(const width of [1440,960,768,390,320]){await page.setViewportSize({width,height:1000});for(const locale of ['th','my','zh-CN','en']){await page.getByTestId('language-selector').selectOption(locale);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await expect(page.locator('.brochure-service').first()).toBeVisible();}}
- await page.getByTestId('theme-selector').selectOption('system');await page.emulateMedia({colorScheme:'light'});await expect(page.locator('html')).toHaveAttribute('data-theme','light');await page.emulateMedia({colorScheme:'dark'});await expect(page.locator('html')).toHaveAttribute('data-theme','dark');
+ await page.getByTestId('theme-selector').selectOption('system');
+ await page.reload();
+ await expect(page.getByTestId('theme-selector')).toHaveValue('system');
+ await expect(page.locator('html')).toHaveAttribute('data-theme','light');
+ await page.emulateMedia({colorScheme:'dark'});
+ await expect(page.locator('html')).toHaveAttribute('data-theme','dark');
+});
+
+test('hero loads local artwork and fonts and respects reduced motion',async({page})=>{
+ await page.goto('/?lang=en');
+ const art=page.locator('.brochure-hero-art');
+ await expect.poll(()=>art.locator('img').evaluate(image=>(image as HTMLImageElement).naturalWidth)).toBe(960);
+ await expect.poll(()=>page.evaluate(async()=>{
+  await document.fonts.ready;
+  return [...document.fonts].filter(font=>font.status==='loaded').map(font=>font.family);
+ })).toEqual(expect.arrayContaining(['DM Sans','Space Grotesk']));
+ await expect(art).toHaveCSS('animation-name','memo-art-enter');
+ await page.emulateMedia({reducedMotion:'reduce'});
+ await expect(art).toHaveCSS('animation-name','none');
 });
