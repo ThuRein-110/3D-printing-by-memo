@@ -28,7 +28,7 @@ export function HeroModel() {
   <figure className="brochure-hero-model" aria-label={label} data-model-state={status}>
    <div className="brochure-hero-art">
     {status !== 'ready' && (
-     <img src="/brand/hero-figurine.webp" width={640} height={640}
+     <img src="/brand/hero-figurine-hd.webp" width={1080} height={1080}
       alt={status === 'unavailable' ? label : ''} fetchPriority="high"/>
     )}
     {status !== 'unavailable' && (

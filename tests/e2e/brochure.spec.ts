@@ -18,7 +18,7 @@ test('dark is the customer default and all themes and languages fit desktop, tab
  await page.emulateMedia({colorScheme:'light'});
  await page.goto('/?lang=en');
  await expect(page.getByTestId('theme-selector')).toHaveValue('dark');
- await expect.poll(()=>page.evaluate(()=>getComputedStyle(document.body).backgroundColor)).toBe('rgb(17, 17, 19)');
+ await expect.poll(()=>page.evaluate(()=>getComputedStyle(document.body).backgroundColor)).toBe('rgb(17, 21, 27)');
  await page.getByTestId('theme-selector').selectOption('light');
  await expect.poll(()=>page.evaluate(()=>getComputedStyle(document.body).backgroundColor)).toBe('rgb(250, 250, 249)');
  await page.reload();
@@ -33,7 +33,7 @@ test('dark is the customer default and all themes and languages fit desktop, tab
  await expect(page.locator('html')).toHaveAttribute('data-theme','dark');
 });
 
-test('hero centers its artwork, staggers its entrance and respects reduced motion',async({page,isMobile})=>{
+test('hero gives its frameless model room to scale and respects reduced motion',async({page,isMobile})=>{
  await page.goto('/?lang=en');
  const art=page.locator('.brochure-hero-art');
  const heroCopy=page.locator('.brochure-hero-copy');
@@ -48,11 +48,18 @@ test('hero centers its artwork, staggers its entrance and respects reduced motio
  await expect(float).toHaveCSS('animation-name','hero-float');
  await expect(float).toHaveCSS('animation-duration','6s');
  await expect(stage).toHaveCSS('perspective','1000px');
+ await expect(stage).toHaveCSS('border-top-width','0px');
+ await expect(art).toHaveCSS('border-top-width','0px');
+ const bounds=(await stage.boundingBox())!;
+ const copy=(await heroCopy.boundingBox())!;
  if(isMobile){
-  const bounds=await stage.boundingBox();
-  const viewport=page.viewportSize();
-  expect(bounds!.width).toBeLessThan(viewport!.width-80);
-  expect(bounds!.x+bounds!.width/2).toBeCloseTo(viewport!.width/2,0);
+  const viewport=page.viewportSize()!;
+  expect(bounds.width).toBeGreaterThan(viewport.width-60);
+  expect(bounds.x+bounds.width/2).toBeCloseTo(viewport.width/2,0);
+  expect(bounds.y).toBeGreaterThan(copy.y+copy.height);
+ }else{
+  expect(bounds.width).toBeGreaterThan(500);
+  expect(bounds.x).toBeGreaterThan(copy.x+copy.width);
  }
  await expect(art).toHaveCSS('animation-name','memo-art-enter');
  await page.emulateMedia({reducedMotion:'reduce'});
@@ -71,6 +78,7 @@ test('the homepage renders and rotates the figurine as a 3D model',async({page})
  await expect(model).toHaveAttribute('data-model-state','ready',{timeout:20000});
  const canvas=model.locator('canvas');
  await expect(canvas).toBeVisible();
+ expect(await canvas.evaluate((el:HTMLCanvasElement)=>el.width/el.clientWidth)).toBeGreaterThanOrEqual(1.49);
  await expect(model.locator('img')).toHaveCount(0);
  await canvas.focus();
  await page.keyboard.press('Home');
@@ -81,11 +89,11 @@ test('the homepage renders and rotates the figurine as a 3D model',async({page})
  await expect.poll(async()=>(await canvas.screenshot()).equals(front)).toBe(true);
 });
 
-test('the hero shows the supplied figurine still if the 3D model cannot load',async({page})=>{
- await page.route('**/brand/hero-figurine.glb',route=>route.abort());
+test('the hero shows the supplied figurine still if the 3D texture cannot load',async({page})=>{
+ await page.route('**/brand/hero-figurine-hd-texture.jpg',route=>route.abort());
  await page.goto('/?lang=en');
  const model=page.locator('.brochure-hero-model');
  await expect(model).toHaveAttribute('data-model-state','unavailable',{timeout:20000});
- await expect.poll(()=>model.locator('img').evaluate(image=>(image as HTMLImageElement).naturalWidth)).toBe(640);
+ await expect.poll(()=>model.locator('img').evaluate(image=>(image as HTMLImageElement).naturalWidth)).toBe(1080);
  await expect(model).toContainText('Still preview');
 });

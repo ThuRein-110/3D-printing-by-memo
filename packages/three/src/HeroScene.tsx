@@ -3,7 +3,7 @@
 import {OrbitControls} from '@react-three/drei';
 import {Canvas, useLoader, useThree} from '@react-three/fiber';
 import {Suspense, useEffect, useRef, type ComponentRef} from 'react';
-import {Spherical, Vector3} from 'three';
+import {Mesh, MeshStandardMaterial, Spherical, Vector3} from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 
 type SceneProps = {
@@ -13,15 +13,20 @@ type SceneProps = {
  onUnavailable: () => void;
 };
 
-const cameraPosition = [.44, .18, 4.8] as const;
+const cameraPosition = [0, .356, 5.088] as const;
 const minDistance = 3.15;
 const maxDistance = 6.5;
 const minPolarAngle = .28;
 const maxPolarAngle = 2.55;
 
 function Figure({onReady}: Pick<SceneProps, 'onReady'>) {
- const {scene} = useLoader(GLTFLoader, '/brand/hero-figurine.glb');
+ const {scene} = useLoader(GLTFLoader, '/brand/hero-figurine-hd.glb');
  useEffect(onReady, [onReady]);
+ const mesh = scene.getObjectByProperty('isMesh', true);
+ const material = mesh instanceof Mesh ? mesh.material : null;
+ if (!(material instanceof MeshStandardMaterial) || !material.map) {
+  throw new Error('The figurine texture could not be loaded.');
+ }
 
  return <primitive object={scene}/>;
 }
@@ -90,14 +95,14 @@ function Controls({label, instructionsId, onUnavailable}: Omit<SceneProps, 'onRe
 export default function HeroScene({onReady, ...controls}: SceneProps) {
  return (
   <Canvas
-   camera={{position: [...cameraPosition], fov: 32, near: .1, far: 30}}
-   dpr={[1, 1.5]}
+   camera={{position: [...cameraPosition], fov: 29, near: .1, far: 30}}
+   dpr={[1.5, 2.25]}
    frameloop="demand"
    gl={{alpha: true, antialias: true, powerPreference: 'low-power'}}
   >
-   <hemisphereLight args={['#f3f5ff', '#827b75', 1.9]}/>
-   <directionalLight position={[-3, 4, 5]} intensity={2.25}/>
-   <directionalLight position={[3, 2, -3]} color="#c7ddff" intensity={1.5}/>
+   <hemisphereLight args={['#ffffff', '#a6a4a0', 1.65]}/>
+   <directionalLight position={[-3, 4, 5]} intensity={1.15}/>
+   <directionalLight position={[3, 2, -3]} intensity={.65}/>
    <Suspense fallback={null}><Figure onReady={onReady}/></Suspense>
    <Controls {...controls}/>
   </Canvas>

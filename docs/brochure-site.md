@@ -2,9 +2,9 @@
 
 The public customer homepage now focuses on four things: services/starting prices, how quoting and ordering work, a credited gallery, and contact. The model-search/chip section and its coming-soon cat state are removed from the homepage. Public navigation links only to these four sections. `/models` redirects to `/gallery` so the previous catalogue index is no longer a public browsing entry point.
 
-The customer site defaults to dark mode. The stone light theme (#fafaf9) and system theme remain available alongside English, Thai, Myanmar and Simplified Chinese. The supplied logo appears in the header and footer, and the gallery retains the licensed photographs. Cabinet Grotesk and Satoshi are served by Fontshare, with local typefaces as fallbacks. Entrance, floating, scroll and hover effects respect the visitor’s reduced-motion preference.
+The customer site defaults to a graphite theme with steel-blue accents. The stone light theme (#fafaf9) and system theme remain available alongside English, Thai, Myanmar and Simplified Chinese. The supplied logo appears in the header and footer, and the gallery retains the licensed photographs. Cabinet Grotesk and Satoshi are served by Fontshare, with local typefaces as fallbacks. Entrance, floating, scroll and hover effects respect the visitor’s reduced-motion preference.
 
-The homepage hero shows a rotatable GLB reconstructed locally with [TripoSR](https://github.com/VAST-AI-Research/TripoSR) from the front view in the supplied `image.png`. The mesh approximates the figurine’s depth and hidden surfaces. The web viewer supports pointer, touch and keyboard rotation. A still cropped from the same reference appears while the model loads and on devices without WebGL.
+The homepage hero shows the figurine on the right at desktop widths and below the text on narrow screens. The geometry was reconstructed locally with [TripoSR](https://github.com/VAST-AI-Research/TripoSR). Both views in the supplied `image.png` were projected onto the mesh and baked into a 2048 × 2048 texture. The mesh approximates the figurine’s depth and the surfaces between those views. The viewer supports pointer, touch and keyboard rotation. A 1080 × 1080 still from the same reference appears while the model loads and on devices without WebGL.
 
 ## Brand asset and contact source
 
