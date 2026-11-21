@@ -2,7 +2,7 @@
 
 The public customer homepage now focuses on four things: services/starting prices, how quoting and ordering work, a credited gallery, and contact. The model-search/chip section and its coming-soon cat state are removed from the homepage. Public navigation links only to these four sections. `/models` redirects to `/gallery` so the previous catalogue index is no longer a public browsing entry point.
 
-The customer site defaults to graphite dark mode with coral accents. Light and system themes remain available alongside English, Thai, Myanmar and Simplified Chinese. The supplied logo appears in the header and footer. The hero uses an AI-generated illustration of a filament-printed knot, and the gallery retains the existing licensed photographs. Space Grotesk and DM Sans are served locally. Entrance, scroll and hover effects respect the visitor’s reduced-motion preference.
+The customer site defaults to a stone canvas (#fafaf9) with emerald (#059669) and orange (#ea580c) accents. Dark and system themes remain available alongside English, Thai, Myanmar and Simplified Chinese. The supplied logo appears in the header and footer. The compact hero uses an AI-generated illustration of a filament-printed knot, and the gallery retains the licensed photographs. Cabinet Grotesk and Satoshi are served by Fontshare, with local typefaces as fallbacks. Entrance, floating, scroll and hover effects respect the visitor’s reduced-motion preference.
 
 ## Brand asset and contact source
 

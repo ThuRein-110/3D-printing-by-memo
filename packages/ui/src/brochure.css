@@ -1,3 +1,18 @@
+/* Variable webfonts served by Fontshare. */
+@font-face {
+  font-family: 'Cabinet Grotesk';
+  src: url('https://cdn.fontshare.com/wf/J2PZYZURCR7HNQKXCZ4VXYA3K5FFCCLT/PZSZLWHMBCE7FFGOUYDEU33FAESUMA3X/JFDL5FBAQ2WMYL3LGKSCZKAIFCS2UQ63.woff2') format('woff2');
+  font-weight: 700 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('https://cdn.fontshare.com/wf/NWBQYJIM7GCZ5XWD7D26ARB3VDY55ZRT/K63EV2KZIGKLE7RANQ2U42S6SVHU5RJ7/X6XYTKIVDUW7GZTZPZNN4EUM5KH54KHF.woff2') format('woff2');
+  font-weight: 400 700;
+  font-display: swap;
+}
+
 @font-face {
   font-family: 'Space Grotesk';
   src: url('/fonts/space-grotesk.woff2') format('woff2');
@@ -13,21 +28,29 @@
 }
 
 :root {
-  --memo-body: 'DM Sans', 'Memo Thai', 'Noto Sans Myanmar', 'Noto Sans SC', sans-serif;
-  --memo-display: 'Space Grotesk', var(--memo-body);
-  --memo-radius: 24px;
+  --memo-body: 'Satoshi', 'DM Sans', 'Memo Thai', 'Noto Sans Myanmar', 'Noto Sans SC', sans-serif;
+  --memo-display: 'Cabinet Grotesk', 'Space Grotesk', var(--memo-body);
+  --memo-leading: .9;
+  --memo-tracking: -.05em;
+  --memo-word-spacing: .09em;
+  --memo-radius: 28px;
+  --memo-radius-lg: 40px;
   --memo-ease: cubic-bezier(.2, .75, .25, 1);
-  --bg: #f8f6f3;
-  --surface: #fffdfa;
-  --surface-2: #eeeae5;
-  --ink: #231e1b;
-  --muted: #605955;
-  --line: #ded6ce;
-  --accent: #a73c23;
-  --on-accent: #fffdfa;
-  --soft: #f3e6df;
-  --peach: #f9e4d9;
-  --shadow: 0 20px 48px #38211312;
+  --emerald: #059669;
+  --orange: #ea580c;
+  --memo-gradient: linear-gradient(90deg, #059669, #ea580c);
+  --bg: #fafaf9;
+  --surface: #fff;
+  --surface-2: #f0f2ec;
+  --ink: #191f1a;
+  --muted: #565e56;
+  --line: #dce2d9;
+  --accent: #04734f;
+  --on-accent: #fff;
+  --soft: #e2f2e9;
+  --peach: #fdefe2;
+  --glass: rgb(255 255 255 / .9);
+  --shadow: 0 20px 25px -5px rgb(231 229 228 / .5), 0 8px 10px -6px rgb(231 229 228 / .5);
   color-scheme: light;
 }
 
@@ -38,10 +61,11 @@ html[data-theme='dark'] {
   --ink: #f7f2ec;
   --muted: #bcb2ac;
   --line: #373135;
-  --accent: #ff9b79;
-  --on-accent: #241712;
-  --soft: #302321;
-  --peach: #3b2724;
+  --accent: #80d7b0;
+  --on-accent: #15231a;
+  --soft: #192a23;
+  --peach: #36271e;
+  --glass: rgb(26 25 27 / .9);
   --danger: #ffb69f;
   --danger-bg: #392820;
   --shadow: 0 20px 48px #0005;
@@ -51,20 +75,29 @@ html[data-theme='dark'] {
 body {
   font-family: var(--memo-body);
   font-size: 1rem;
+  font-weight: 400;
 }
 
 html[lang='th'] {
-  --memo-body: 'DM Sans', 'Memo Thai', sans-serif;
+  --memo-leading: 1.22;
+  --memo-tracking: -.025em;
+  --memo-word-spacing: normal;
 }
 
 html[lang='my'] {
-  --memo-body: 'Noto Sans Myanmar', 'DM Sans', sans-serif;
+  --memo-body: 'Noto Sans Myanmar', 'Satoshi', 'DM Sans', sans-serif;
   --memo-display: var(--memo-body);
+  --memo-leading: 1.55;
+  --memo-tracking: 0em;
+  --memo-word-spacing: normal;
 }
 
 html[lang='zh-CN'] {
-  --memo-body: 'DM Sans', 'Noto Sans SC', sans-serif;
+  --memo-body: 'Satoshi', 'DM Sans', 'Noto Sans SC', sans-serif;
   --memo-display: var(--memo-body);
+  --memo-leading: 1.2;
+  --memo-tracking: -.025em;
+  --memo-word-spacing: normal;
 }
 
 html[lang='my'] body,
@@ -74,6 +107,14 @@ html[lang='zh-CN'] body {
 
 body :is(h1, h2, h3, .brand, .brochure-price strong) {
   font-family: var(--memo-display);
+}
+
+body :is(h1, h2, h3, h4, h5, h6) {
+  font-family: var(--memo-display);
+  font-weight: 700;
+  line-height: var(--memo-leading);
+  letter-spacing: var(--memo-tracking);
+  word-spacing: var(--memo-word-spacing);
 }
 
 :focus-visible {
@@ -113,6 +154,7 @@ body :is(h1, h2, h3, .brand, .brochure-price strong) {
   gap: clamp(15px, 2.3vw, 34px);
   font-size: .875rem;
   color: var(--muted);
+  font-weight: 500;
 }
 
 .memo-header .header-select {
@@ -185,19 +227,20 @@ body :is(h1, h2, h3, .brand, .brochure-price strong) {
 
 .brochure-hero {
   display: grid;
-  grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, .95fr);
   align-items: center;
-  gap: clamp(32px, 5vw, 72px);
-  padding-block: clamp(44px, 6vw, 88px);
+  max-width: 1080px;
+  gap: clamp(26px, 4.5vw, 64px);
+  padding-block: clamp(38px, 6vw, 76px);
   border-bottom: 1px solid var(--line);
 }
 
 .brochure-hero h1 {
-  margin: 0 0 24px;
-  font-size: clamp(2.75rem, 5.8vw, 5.75rem);
-  font-weight: 600;
-  line-height: 1.05;
-  letter-spacing: -.067em;
+  margin: 0 0 18px;
+  font-size: clamp(2.75rem, 5vw, 4.5rem);
+  font-weight: 900;
+  line-height: var(--memo-leading);
+  letter-spacing: var(--memo-tracking);
   text-wrap: balance;
 }
 
@@ -207,32 +250,79 @@ body :is(h1, h2, h3, .brand, .brochure-price strong) {
 
 .brochure-hero-highlight {
   color: var(--accent);
-}
-
-html[lang='th'] .brochure-hero h1,
-html[lang='zh-CN'] .brochure-hero h1 {
-  letter-spacing: -.025em;
-  line-height: 1.2;
+  width: fit-content;
+  max-width: 100%;
+  padding-block: .06em .16em;
+  margin-block: -.06em -.16em;
+  background: var(--memo-gradient);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 html[lang='my'] .brochure-hero h1 {
-  font-size: clamp(2.125rem, 4.1vw, 4rem);
-  line-height: 1.55;
-  letter-spacing: 0;
+  font-size: clamp(2rem, 3.7vw, 3.5rem);
 }
 
 .brochure-intro {
   max-width: 44ch;
   margin: 0;
-  font-size: clamp(1rem, 1.5vw, 1.125rem);
-  line-height: 1.8;
+  font-size: 1rem;
+  line-height: 1.65;
 }
 
 .brochure-hero-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 32px;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.brochure-hero-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+  width: 100%;
+  max-width: 440px;
+  aspect-ratio: 1.12;
+  justify-self: center;
+  border: 1px solid var(--line);
+  border-radius: var(--memo-radius-lg);
+  background:
+    radial-gradient(ellipse at 16% 8%, var(--soft), transparent 67%),
+    radial-gradient(ellipse at 92% 92%, var(--peach), transparent 72%),
+    var(--surface);
+  perspective: 1000px;
+}
+
+.brochure-hero-stage::before,
+.brochure-hero-stage::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  width: 43%;
+  height: 50%;
+  border-radius: var(--memo-radius-lg);
+}
+
+.brochure-hero-stage::before {
+  inset: 13% auto auto 11%;
+  border: 1px solid color-mix(in srgb, var(--emerald) 24%, transparent);
+  background: color-mix(in srgb, var(--emerald) 16%, var(--soft));
+  rotate: -13deg;
+}
+
+.brochure-hero-stage::after {
+  inset: auto 10% 11% auto;
+  border: 1px solid color-mix(in srgb, var(--orange) 20%, transparent);
+  background: color-mix(in srgb, var(--orange) 18%, var(--peach));
+  rotate: 13deg;
+}
+
+.brochure-hero-float {
+  width: 74%;
+  max-width: 310px;
+  transform-style: preserve-3d;
 }
 
 .brochure-hero-art {
@@ -240,10 +330,10 @@ html[lang='my'] .brochure-hero h1 {
   isolation: isolate;
   overflow: hidden;
   aspect-ratio: 1;
-  border: 1px solid var(--line);
+  border: 1px solid #ffffff40;
   border-radius: 32px;
   background: #1d191a;
-  box-shadow: var(--shadow);
+  box-shadow: 0 20px 36px #18271e36;
 }
 
 .brochure-hero-art img {
@@ -256,10 +346,21 @@ html[lang='my'] .brochure-hero h1 {
 .brochure-hero-art::after {
   content: '';
   position: absolute;
-  inset: 13px;
+  inset: 8px;
   border: 1px solid #fff2;
   border-radius: 22px;
   pointer-events: none;
+}
+
+body :is(.button, .choice, .brochure-image-button) {
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  transition: background-color 300ms ease, border-color 300ms ease, box-shadow 300ms ease,
+    transform 300ms var(--memo-ease), translate 300ms var(--memo-ease), scale 300ms var(--memo-ease);
+}
+
+body :is(.button, .choice, .brochure-image-button):active:not(:disabled) {
+  scale: .95;
 }
 
 .brochure-site :is(.button, .choice),
@@ -267,11 +368,23 @@ html[lang='my'] .brochure-hero h1 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 12px;
+  border-radius: 24px;
   font-size: .875rem;
   font-weight: 700;
   text-align: center;
-  transition: background-color 200ms ease, border-color 200ms ease, box-shadow 200ms ease, translate 200ms var(--memo-ease);
+}
+
+.brochure-site .button,
+.memo-header .button {
+  color: #111810;
+  background: var(--emerald);
+  border-color: var(--emerald);
+}
+
+.brochure-hero-actions .choice {
+  color: #17140e;
+  background: var(--orange);
+  border-color: var(--orange);
 }
 
 .brochure-site .choice {
@@ -287,9 +400,9 @@ html[lang='my'] .brochure-hero h1 {
 .brochure-contact :is(h1, h2) {
   margin: 0 0 14px;
   font-size: clamp(2.1rem, 4.1vw, 3.6rem);
-  font-weight: 600;
-  line-height: 1.18;
-  letter-spacing: -.053em;
+  font-weight: 800;
+  line-height: var(--memo-leading);
+  letter-spacing: var(--memo-tracking);
   text-wrap: balance;
 }
 
@@ -318,8 +431,6 @@ html[lang='my'] .brochure-hero h1 {
 .brochure-service h3 {
   margin-bottom: 12px;
   font-size: clamp(1.35rem, 2.3vw, 1.9rem);
-  font-weight: 600;
-  letter-spacing: -.03em;
 }
 
 .brochure-service p {
@@ -344,7 +455,7 @@ html[lang='my'] .brochure-hero h1 {
 .brochure-price strong {
   color: var(--accent);
   font-size: clamp(2.25rem, 4vw, 3.3rem);
-  font-weight: 600;
+  font-weight: 800;
   line-height: 1.2;
   letter-spacing: -.055em;
 }
@@ -381,15 +492,13 @@ html[lang='my'] .brochure-hero h1 {
   display: inline-block;
   margin-bottom: 16px;
   color: var(--accent);
-  font: 600 .875rem var(--memo-display);
+  font: 700 .875rem var(--memo-display);
   letter-spacing: .08em;
 }
 
 .brochure-process h3 {
   margin-bottom: 6px;
   font-size: 1.35rem;
-  font-weight: 600;
-  letter-spacing: -.025em;
 }
 
 .brochure-process p {
@@ -410,7 +519,6 @@ html[lang='my'] .brochure-hero h1 {
 
 .brochure-image-button {
   display: block;
-  overflow: hidden;
   width: 100%;
   padding: 0;
   border: 1px solid var(--line);
@@ -419,11 +527,11 @@ html[lang='my'] .brochure-hero h1 {
   color: var(--ink);
   text-align: start;
   cursor: zoom-in;
-  transition: border-color 240ms ease, box-shadow 240ms ease, translate 280ms var(--memo-ease);
 }
 
 .brochure-image-button .inspiration-photo {
   aspect-ratio: 4 / 3;
+  border-radius: calc(var(--memo-radius) - 1px) calc(var(--memo-radius) - 1px) 0 0;
   border-bottom: 1px solid var(--line);
 }
 
@@ -453,7 +561,8 @@ html[lang='my'] .brochure-hero h1 {
   padding: 20px;
   border: 1px solid var(--line);
   border-radius: var(--memo-radius);
-  background: var(--surface);
+  background: var(--glass);
+  backdrop-filter: blur(16px);
   color: var(--ink);
 }
 
@@ -536,13 +645,14 @@ html[lang='my'] .brochure-hero h1 {
   .brochure-site .button:hover:not(:disabled),
   .memo-header .button:hover {
     translate: 0 -2px;
-    transform: none;
+    transform: perspective(1000px) rotateX(5deg);
     box-shadow: 0 8px 24px color-mix(in srgb, var(--accent) 23%, transparent);
   }
 
   .brochure-site .choice:hover {
     border-color: var(--accent);
     translate: 0 -2px;
+    transform: perspective(1000px) rotateX(5deg);
   }
 
   .brochure-service:hover,
@@ -550,6 +660,10 @@ html[lang='my'] .brochure-hero h1 {
     border-color: color-mix(in srgb, var(--accent) 60%, var(--line));
     box-shadow: var(--shadow);
     translate: 0 -4px;
+  }
+
+  .brochure-image-button:hover {
+    transform: perspective(1000px) rotateX(4deg) rotateY(-4deg);
   }
 
   .brochure-image-button:hover img { scale: 1.045; }
@@ -560,7 +674,7 @@ html[lang='my'] .brochure-hero h1 {
     position: sticky;
     z-index: 5;
     top: 0;
-    background: color-mix(in srgb, var(--bg) 93%, transparent);
+    background: var(--glass);
     backdrop-filter: blur(14px);
   }
 
@@ -595,8 +709,9 @@ html[lang='my'] .brochure-hero h1 {
     gap: 2px;
     padding: 8px;
     border: 1px solid var(--line);
-    border-radius: 14px;
-    background: var(--surface);
+    border-radius: 24px;
+    background: var(--glass);
+    backdrop-filter: blur(14px);
     box-shadow: var(--shadow);
     font-size: .875rem;
   }
@@ -625,10 +740,16 @@ html[lang='my'] .brochure-hero h1 {
 
   .brochure-hero {
     grid-template-columns: minmax(0, 1fr);
-    gap: 28px;
+    justify-items: center;
+    gap: 22px;
+    padding-block: 36px;
   }
 
-  .brochure-hero h1 { font-size: clamp(2.75rem, 9vw, 4.6rem); }
+  .brochure-hero-copy { text-align: center; }
+  .brochure-hero h1 { font-size: clamp(2.6rem, 8vw, 3.6rem); }
+  .brochure-hero-highlight, .brochure-intro { margin-inline: auto; }
+  .brochure-hero-actions { justify-content: center; }
+  .brochure-hero-stage { max-width: 330px; }
 
   .brochure-hero-art { border-radius: var(--memo-radius); }
   .brochure-hero-art::after { border-radius: 16px; }
@@ -650,8 +771,9 @@ html[lang='my'] .brochure-hero h1 {
   .memo-header .mobile-menu summary { padding-inline: 4px; font-size: .8125rem; }
   .brochure-services, .brochure-process { grid-template-columns: minmax(0, 1fr); }
   .brochure-gallery-grid { gap: 18px 12px; }
-  .brochure-image-button { border-radius: 16px; }
   .brochure-image-caption { padding: 10px 12px; font-size: .875rem; }
+  .brochure-hero-stage { max-width: 290px; }
+  .brochure-hero .eyebrow { margin-bottom: 15px; }
 }
 
 @media (max-width: 380px) {
@@ -684,6 +806,11 @@ html[lang='my'] .brochure-hero h1 {
   }
 }
 
+@keyframes hero-float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(2deg); }
+}
+
 @keyframes memo-reveal {
   from { opacity: .68; transform: translateY(18px); }
 }
@@ -704,6 +831,7 @@ html[lang='my'] .brochure-hero h1 {
   .brochure-hero-actions a:last-child { animation-delay: 520ms; }
   .brochure-hero-actions a:focus-visible { animation: none; }
   .brochure-hero-art { animation: memo-art-enter 900ms var(--memo-ease) 130ms backwards; }
+  .brochure-hero-float { animation: hero-float 6s ease-in-out 1050ms infinite; }
 
   @supports (animation-timeline: view()) {
     .brochure-site :is(.brochure-section-heading, .brochure-service, .brochure-process li, .brochure-gallery-card, .brochure-contact) {
@@ -722,4 +850,5 @@ html[lang='my'] .brochure-hero h1 {
   }
 
   .brochure-image-button:hover img { scale: none; }
+  body :is(.button, .choice, .brochure-image-button):active:not(:disabled) { scale: none; }
 }

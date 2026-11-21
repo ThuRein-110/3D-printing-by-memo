@@ -2,7 +2,7 @@
 
 Two independent Next.js applications in one pnpm / Turborepo workspace, backed by one Supabase project. A six-step customer studio and a separate MFA-protected operations app share English, Thai, Myanmar and Simplified Chinese translations plus light/dark/system themes. Start with the [production upgrade and rollout guide](docs/production-upgrade.md).
 
-The customer homepage is a dark-first service brochure with starting prices, the ordering process, a licensed example gallery and business contact links. It uses the uploaded `logo.jpg`. See [the customer brochure guide](docs/brochure-site.md). Account, quotation and admin workflows are available separately.
+The customer homepage is a service brochure with starting prices, the ordering process, a licensed example gallery and business contact links. It defaults to the stone theme with emerald and orange accents and uses the uploaded `logo.jpg`. See [the customer brochure guide](docs/brochure-site.md). Account, quotation and admin workflows are available separately.
 
 ## Run locally
 

@@ -141,8 +141,12 @@ export function BrochureHome() {
       <a className="choice" href="#services">{t('brochure.services')}</a>
      </div>
     </div>
-    <div className="brochure-hero-art">
-     <img src="/brand/printed-knot.webp" width={960} height={960} alt="" fetchPriority="high"/>
+    <div className="brochure-hero-stage">
+     <div className="brochure-hero-float">
+      <div className="brochure-hero-art">
+       <img src="/brand/printed-knot.webp" width={960} height={960} alt="" fetchPriority="high"/>
+      </div>
+     </div>
     </div>
    </section>
    <ServicePrices/>
