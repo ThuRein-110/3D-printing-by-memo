@@ -2,7 +2,9 @@
 
 The public customer homepage now focuses on four things: services/starting prices, how quoting and ordering work, a credited gallery, and contact. The model-search/chip section and its coming-soon cat state are removed from the homepage. Public navigation links only to these four sections. `/models` redirects to `/gallery` so the previous catalogue index is no longer a public browsing entry point.
 
-The customer site defaults to a stone canvas (#fafaf9) with emerald (#059669) and orange (#ea580c) accents. Dark and system themes remain available alongside English, Thai, Myanmar and Simplified Chinese. The supplied logo appears in the header and footer. The compact hero uses an AI-generated illustration of a filament-printed knot, and the gallery retains the licensed photographs. Cabinet Grotesk and Satoshi are served by Fontshare, with local typefaces as fallbacks. Entrance, floating, scroll and hover effects respect the visitor’s reduced-motion preference.
+The customer site defaults to dark mode. The stone light theme (#fafaf9) and system theme remain available alongside English, Thai, Myanmar and Simplified Chinese. The supplied logo appears in the header and footer, and the gallery retains the licensed photographs. Cabinet Grotesk and Satoshi are served by Fontshare, with local typefaces as fallbacks. Entrance, floating, scroll and hover effects respect the visitor’s reduced-motion preference.
+
+The homepage hero shows a rotatable GLB reconstructed locally with [TripoSR](https://github.com/VAST-AI-Research/TripoSR) from the front view in the supplied `image.png`. The mesh approximates the figurine’s depth and hidden surfaces. The web viewer supports pointer, touch and keyboard rotation. A still cropped from the same reference appears while the model loads and on devices without WebGL.
 
 ## Brand asset and contact source
 
@@ -22,4 +24,4 @@ Customer-facing calls to action lead to the contact section, the Facebook busine
 
 Verification covers exact logo copies, browser image decoding, contact URLs, the catalogue redirect, four languages, theme persistence, reduced motion, responsive layouts and keyboard image dialogs.
 
-The dark-theme refresh passed 150 unit/API/database tests, 44 browser tests, TypeScript and both production builds. Two connected-order tests require a configured non-production Supabase project and were skipped. All ten focused brochure tests passed after the final mobile header adjustment.
+The interactive hero passed 150 unit/API/database tests, 48 browser tests, TypeScript and both production builds. Two connected-order tests require a configured non-production Supabase project and were skipped.

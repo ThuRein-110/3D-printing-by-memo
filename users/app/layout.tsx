@@ -4,7 +4,7 @@ import {BOOTSTRAP} from '@mfu/ui/settings-script.ts';
 import {preferences,localizedMetadata} from '@mfu/ui/server-locale.ts';
 export async function generateMetadata(){return localizedMetadata(false);}
 export default async function Layout({children}:{children:React.ReactNode}){
- const settings=await preferences('light');
+ const settings=await preferences('dark');
  return (
   <html lang={settings.locale} data-theme={settings.theme} suppressHydrationWarning>
    <head>

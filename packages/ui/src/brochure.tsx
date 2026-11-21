@@ -3,6 +3,7 @@
 import {useRef, useState} from 'react';
 import {inspirationImages, type InspirationImage} from '@mfu/types/inspiration.ts';
 import {InspirationCredit, InspirationPhoto} from './inspiration';
+import {HeroModel} from './hero-model';
 import {memoContact} from './memo-brand';
 import {usePricingMinimums} from './pricing-minimums';
 import {useLanguage} from './settings';
@@ -143,9 +144,7 @@ export function BrochureHome() {
     </div>
     <div className="brochure-hero-stage">
      <div className="brochure-hero-float">
-      <div className="brochure-hero-art">
-       <img src="/brand/printed-knot.webp" width={960} height={960} alt="" fetchPriority="high"/>
-      </div>
+      <HeroModel/>
      </div>
     </div>
    </section>

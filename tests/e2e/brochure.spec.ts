@@ -14,15 +14,15 @@ test('gallery loads actual licensed local images, shows attribution, and support
  await page.goto('/gallery?lang=en');for(const card of await page.locator('.brochure-gallery-card').all()){await card.scrollIntoViewIfNeeded();await expect(card.locator('[data-image-state=loaded]')).toBeVisible();expect(await card.locator('img').evaluate((i:HTMLImageElement)=>i.complete&&i.naturalWidth>0)).toBe(true);await expect(card.locator('a[rel*=license]')).toHaveAttribute('href',/creativecommons.org/);}
  await expect(page.locator('.brochure-section-heading')).toContainText('not MEMO products or completed customer orders');const preview=page.locator('.brochure-image-button').first();await preview.focus();await expect(preview).toBeFocused();await page.keyboard.press('Enter');await expect(page.locator('dialog')).toBeVisible();await expect(page.locator('dialog [data-image-state=loaded]')).toBeVisible();await expect(page.locator('dialog .inspiration-credit')).toContainText('Sumanbargavr');await page.keyboard.press('Escape');await expect(page.locator('dialog')).not.toBeVisible();await expect(preview).toBeFocused();await expect(page.locator('a[href*="/inspiration/"]')).toHaveCount(0);
 });
-test('stone is the customer default and all themes and languages fit desktop, tablet and mobile',async({page})=>{
- await page.emulateMedia({colorScheme:'dark'});
+test('dark is the customer default and all themes and languages fit desktop, tablet and mobile',async({page})=>{
+ await page.emulateMedia({colorScheme:'light'});
  await page.goto('/?lang=en');
- await expect(page.getByTestId('theme-selector')).toHaveValue('light');
- await expect.poll(()=>page.evaluate(()=>getComputedStyle(document.body).backgroundColor)).toBe('rgb(250, 250, 249)');
- await page.getByTestId('theme-selector').selectOption('dark');
- await expect.poll(()=>page.evaluate(()=>getComputedStyle(document.body).backgroundColor)).toBe('rgb(17, 17, 19)');
- await page.reload();
  await expect(page.getByTestId('theme-selector')).toHaveValue('dark');
+ await expect.poll(()=>page.evaluate(()=>getComputedStyle(document.body).backgroundColor)).toBe('rgb(17, 17, 19)');
+ await page.getByTestId('theme-selector').selectOption('light');
+ await expect.poll(()=>page.evaluate(()=>getComputedStyle(document.body).backgroundColor)).toBe('rgb(250, 250, 249)');
+ await page.reload();
+ await expect(page.getByTestId('theme-selector')).toHaveValue('light');
  for(const width of [1440,960,768,390,320]){await page.setViewportSize({width,height:1000});for(const locale of ['th','my','zh-CN','en']){await page.getByTestId('language-selector').selectOption(locale);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await expect(page.locator('.brochure-service').first()).toBeVisible();}}
  await page.getByTestId('theme-selector').selectOption('system');
  await page.emulateMedia({colorScheme:'light'});
@@ -41,7 +41,6 @@ test('hero centers its artwork, staggers its entrance and respects reduced motio
  await expect.poll(()=>revealItems.evaluateAll(items=>items.map(item=>getComputedStyle(item).animationDelay))).toEqual([
   '0s','0.11s','0.23s','0.35s','0.45s','0.52s',
  ]);
- await expect.poll(()=>art.locator('img').evaluate(image=>(image as HTMLImageElement).naturalWidth)).toBe(960);
  await expect(heroCopy.locator('h1')).toHaveCSS('font-family',/^"Cabinet Grotesk"/);
  await expect(heroCopy.locator('.brochure-intro')).toHaveCSS('font-family',/^Satoshi/);
  const float=page.locator('.brochure-hero-float');
@@ -63,4 +62,30 @@ test('hero centers its artwork, staggers its entrance and respects reduced motio
   const style=getComputedStyle(item);
   return style.animationName==='none'&&style.opacity==='1';
  }))).toBe(true);
+});
+
+test('the homepage renders and rotates the figurine as a 3D model',async({page})=>{
+ await page.emulateMedia({reducedMotion:'reduce'});
+ await page.goto('/?lang=en');
+ const model=page.locator('.brochure-hero-model');
+ await expect(model).toHaveAttribute('data-model-state','ready',{timeout:20000});
+ const canvas=model.locator('canvas');
+ await expect(canvas).toBeVisible();
+ await expect(model.locator('img')).toHaveCount(0);
+ await canvas.focus();
+ await page.keyboard.press('Home');
+ const front=await canvas.screenshot();
+ await page.keyboard.press('ArrowRight');
+ await expect.poll(async()=>(await canvas.screenshot()).equals(front)).toBe(false);
+ await page.keyboard.press('Home');
+ await expect.poll(async()=>(await canvas.screenshot()).equals(front)).toBe(true);
+});
+
+test('the hero shows the supplied figurine still if the 3D model cannot load',async({page})=>{
+ await page.route('**/brand/hero-figurine.glb',route=>route.abort());
+ await page.goto('/?lang=en');
+ const model=page.locator('.brochure-hero-model');
+ await expect(model).toHaveAttribute('data-model-state','unavailable',{timeout:20000});
+ await expect.poll(()=>model.locator('img').evaluate(image=>(image as HTMLImageElement).naturalWidth)).toBe(640);
+ await expect(model).toContainText('Still preview');
 });

@@ -325,6 +325,11 @@ html[lang='my'] .brochure-hero h1 {
   transform-style: preserve-3d;
 }
 
+.brochure-hero-model {
+  margin: 0;
+  min-width: 0;
+}
+
 .brochure-hero-art {
   position: relative;
   isolation: isolate;
@@ -332,15 +337,42 @@ html[lang='my'] .brochure-hero h1 {
   aspect-ratio: 1;
   border: 1px solid #ffffff40;
   border-radius: 32px;
-  background: #1d191a;
+  background: radial-gradient(ellipse at 52% 36%, #41484c, #15171a 78%);
   box-shadow: 0 20px 36px #18271e36;
 }
 
-.brochure-hero-art img {
+.brochure-hero-art > img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.brochure-hero-render {
+  position: absolute;
+  inset: 0;
+}
+
+.brochure-hero-render canvas {
+  display: block;
+  cursor: grab;
+  touch-action: pan-y pinch-zoom !important; /* Keep vertical page scrolling over the model. */
+}
+
+.brochure-hero-render canvas:active { cursor: grabbing; }
+
+.brochure-hero-render canvas:focus-visible {
+  outline: 2px solid #b9f3d8;
+  outline-offset: -4px;
+}
+
+.brochure-hero-caption {
+  margin-top: 8px;
+  min-height: 1.5em;
+  color: var(--muted);
+  text-align: center;
+  font-size: .75rem;
+  line-height: 1.5;
 }
 
 .brochure-hero-art::after {
@@ -832,6 +864,8 @@ body :is(.button, .choice, .brochure-image-button):active:not(:disabled) {
   .brochure-hero-actions a:focus-visible { animation: none; }
   .brochure-hero-art { animation: memo-art-enter 900ms var(--memo-ease) 130ms backwards; }
   .brochure-hero-float { animation: hero-float 6s ease-in-out 1050ms infinite; }
+  .brochure-hero-stage:hover .brochure-hero-float,
+  .brochure-hero-stage:focus-within .brochure-hero-float { animation-play-state: paused; }
 
   @supports (animation-timeline: view()) {
     .brochure-site :is(.brochure-section-heading, .brochure-service, .brochure-process li, .brochure-gallery-card, .brochure-contact) {

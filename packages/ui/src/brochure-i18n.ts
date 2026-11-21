@@ -1,4 +1,7 @@
 export const brochureTranslations={
+ 'brochure.model':['Interactive 3D figurine','โมเดลฟิกเกอร์ 3 มิติ','အပြန်အလှန်ကြည့်နိုင်သော 3D ရုပ်တု','交互式 3D 人偶'],
+ 'brochure.modelControls':['Drag or use arrow keys to rotate.','ลากหรือใช้ปุ่มลูกศรเพื่อหมุน','လှည့်ရန် ဆွဲပါ သို့မဟုတ် မြားခလုတ်များ သုံးပါ။','拖动或使用方向键旋转。'],
+ 'brochure.modelUnavailable':['Still preview','ภาพตัวอย่าง','အစမ်းကြည့်ပုံ','静态预览'],
  'brochure.intro':['3D printing and custom design in Chiang Rai. From a ready-to-print file to a new idea, let’s make something you can hold.','บริการพิมพ์ 3 มิติและออกแบบเฉพาะในเชียงราย จากไฟล์พร้อมพิมพ์หรือไอเดียใหม่ ให้เราช่วยสร้างให้จับต้องได้','ချင်းရိုင်ရှိ 3D ပုံနှိပ်နှင့် စိတ်ကြိုက်ဒီဇိုင်း ဝန်ဆောင်မှု။ အသင့်ဖိုင် သို့မဟုတ် စိတ်ကူးသစ်မှ လက်တွေ့ပစ္စည်းအဖြစ် ဖန်တီးကြစို့။','清莱的 3D 打印与定制设计服务。从可打印文件到全新创意，让灵感成为实物。'],
  'brochure.contact':['Contact MEMO','ติดต่อ MEMO','MEMO ကို ဆက်သွယ်ရန်','联系 MEMO'],
  'brochure.process':['How it works','ขั้นตอนการใช้บริการ','ဝန်ဆောင်မှု လုပ်ငန်းစဉ်','服务流程'],
