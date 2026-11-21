@@ -32,9 +32,14 @@ test('dark is the customer default and all themes and languages fit desktop, tab
  await expect(page.locator('html')).toHaveAttribute('data-theme','dark');
 });
 
-test('hero loads local artwork and fonts and respects reduced motion',async({page})=>{
+test('hero staggers its entrance, loads local artwork and fonts, and respects reduced motion',async({page})=>{
  await page.goto('/?lang=en');
  const art=page.locator('.brochure-hero-art');
+ const heroCopy=page.locator('.brochure-hero-copy');
+ const revealItems=heroCopy.locator('.eyebrow,h1 span,.brochure-intro,.brochure-hero-actions a');
+ await expect.poll(()=>revealItems.evaluateAll(items=>items.map(item=>getComputedStyle(item).animationDelay))).toEqual([
+  '0s','0.11s','0.23s','0.35s','0.45s','0.52s',
+ ]);
  await expect.poll(()=>art.locator('img').evaluate(image=>(image as HTMLImageElement).naturalWidth)).toBe(960);
  await expect.poll(()=>page.evaluate(async()=>{
   await document.fonts.ready;
@@ -43,4 +48,8 @@ test('hero loads local artwork and fonts and respects reduced motion',async({pag
  await expect(art).toHaveCSS('animation-name','memo-art-enter');
  await page.emulateMedia({reducedMotion:'reduce'});
  await expect(art).toHaveCSS('animation-name','none');
+ await expect.poll(()=>revealItems.evaluateAll(items=>items.every(item=>{
+  const style=getComputedStyle(item);
+  return style.animationName==='none'&&style.opacity==='1';
+ }))).toBe(true);
 });

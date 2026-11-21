@@ -131,7 +131,10 @@ export function BrochureHome() {
    <section className="wrap brochure-hero">
     <div className="brochure-hero-copy">
      <p className="eyebrow">3D Printing MFU by MEMO</p>
-     <h1>{t('home.title')} <span>{t('home.highlight')}</span></h1>
+     <h1>
+      <span>{t('home.title')}</span>{' '}
+      <span className="brochure-hero-highlight">{t('home.highlight')}</span>
+     </h1>
      <p className="brochure-intro">{t('brochure.intro')}</p>
      <div className="brochure-hero-actions">
       <a className="button" href="#contact">{t('brochure.contact')}</a>
