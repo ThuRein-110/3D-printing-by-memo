@@ -1,7 +1,7 @@
 'use client';
 
 import {useRef, useState} from 'react';
-import {inspirationImages, type InspirationImage} from '@mfu/types/inspiration.ts';
+import {everydayPrints, type EverydayPrint} from './everyday-prints';
 import {InspirationCredit, InspirationPhoto} from './inspiration';
 import {HeroModel} from './hero-model';
 import {memoContact} from './memo-brand';
@@ -60,41 +60,44 @@ export function ShowcaseGallery({standalone = false}: {standalone?: boolean} = {
  const {t} = useLanguage();
  const Heading = standalone ? 'h1' : 'h2';
  const dialog = useRef<HTMLDialogElement>(null);
- const [selected, setSelected] = useState<InspirationImage>();
+ const [selected, setSelected] = useState<EverydayPrint>();
 
  return (
   <section id="gallery" className="wrap brochure-section brochure-gallery">
    <div className="brochure-section-heading">
-    <Heading>{t('nav.gallery')}</Heading>
-    <p>{t('brochure.galleryNote')}</p>
+    <Heading>{t('brochure.everydayTitle')}</Heading>
+    <p>{t('brochure.everydayIntro')}</p>
    </div>
    <div className="brochure-gallery-grid">
-    {inspirationImages.map(image => (
+    {everydayPrints.map(image => (
      <article className="brochure-gallery-card" key={image.id}>
       <button
        type="button"
        className="brochure-image-button"
-       aria-label={`${t('gallery.preview')}: ${t(`inspiration.${image.id}`)}`}
+       aria-label={`${t('gallery.preview')}: ${t(`everyday.${image.id}`)}`}
        onClick={() => {
         setSelected(image);
         dialog.current?.showModal();
        }}
       >
-       <InspirationPhoto image={image}/>
-       <span className="brochure-image-caption">{t(`inspiration.${image.id}`)}</span>
+       <InspirationPhoto image={image} alt={t(`everyday.${image.id}`)}/>
+       <span className="brochure-image-caption">
+        {t(`everyday.${image.id}`)}
+        <span className="brochure-image-use">{t(`everyday.${image.id}Use`)}</span>
+       </span>
       </button>
       <InspirationCredit image={image}/>
      </article>
     ))}
    </div>
-   <dialog ref={dialog} className="brochure-image-dialog" aria-label={t('nav.gallery')}>
+   <dialog ref={dialog} className="brochure-image-dialog" aria-label={t('brochure.everydayTitle')}>
     <button type="button" className="choice" onClick={() => dialog.current?.close()}>{t('carousel.close')}</button>
     {selected && (
      <>
-      <InspirationPhoto key={selected.id} image={selected}/>
-      <h3>{t(`inspiration.${selected.id}`)}</h3>
+      <InspirationPhoto key={selected.id} image={selected} alt={t(`everyday.${selected.id}`)}/>
+      <h3>{t(`everyday.${selected.id}`)}</h3>
+      <p>{t(`everyday.${selected.id}Use`)}</p>
       <InspirationCredit image={selected}/>
-      <p>{t('brochure.galleryNote')}</p>
      </>
     )}
    </dialog>

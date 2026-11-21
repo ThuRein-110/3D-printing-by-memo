@@ -211,6 +211,22 @@ body :is(h1, h2, h3, h4, h5, h6) {
   font-size: .8125rem;
 }
 
+.memo-sound-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  border-radius: 24px;
+  font-size: .8125rem;
+}
+
+.memo-sound-toggle span {
+  color: var(--muted);
+}
+
+.memo-sound-toggle[aria-pressed='true'] span {
+  color: var(--accent);
+}
+
 .brochure-site .eyebrow {
   margin: 0 0 22px;
   color: var(--accent);
@@ -506,11 +522,15 @@ body :is(.button, .choice, .brochure-image-button):active:not(:disabled) {
 }
 
 .brochure-gallery-card {
+  display: flex;
+  flex-direction: column;
   min-width: 0;
 }
 
 .brochure-image-button {
-  display: block;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
   width: 100%;
   padding: 0;
   border: 1px solid var(--line);
@@ -522,12 +542,14 @@ body :is(.button, .choice, .brochure-image-button):active:not(:disabled) {
 }
 
 .brochure-image-button .inspiration-photo {
+  width: 100%;
   aspect-ratio: 4 / 3;
   border-radius: calc(var(--memo-radius) - 1px) calc(var(--memo-radius) - 1px) 0 0;
   border-bottom: 1px solid var(--line);
 }
 
 .brochure-image-button img {
+  object-fit: cover;
   transition: opacity 200ms ease, scale 420ms var(--memo-ease);
 }
 
@@ -536,6 +558,15 @@ body :is(.button, .choice, .brochure-image-button):active:not(:disabled) {
   padding: 14px 18px;
   font-size: 1rem;
   font-weight: 700;
+}
+
+.brochure-image-use {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: .875rem;
+  font-weight: 400;
+  line-height: 1.5;
 }
 
 .brochure-gallery-card > .inspiration-credit {

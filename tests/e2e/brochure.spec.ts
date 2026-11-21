@@ -12,7 +12,40 @@ test('Facebook, telephone and section links are real and require no customer sig
 });
 test('gallery loads actual licensed local images, shows attribution, and supports keyboard preview without checkout',async({page})=>{
  await page.goto('/gallery?lang=en');for(const card of await page.locator('.brochure-gallery-card').all()){await card.scrollIntoViewIfNeeded();await expect(card.locator('[data-image-state=loaded]')).toBeVisible();expect(await card.locator('img').evaluate((i:HTMLImageElement)=>i.complete&&i.naturalWidth>0)).toBe(true);await expect(card.locator('a[rel*=license]')).toHaveAttribute('href',/creativecommons.org/);}
- await expect(page.locator('.brochure-section-heading')).toContainText('not MEMO products or completed customer orders');const preview=page.locator('.brochure-image-button').first();await preview.focus();await expect(preview).toBeFocused();await page.keyboard.press('Enter');await expect(page.locator('dialog')).toBeVisible();await expect(page.locator('dialog [data-image-state=loaded]')).toBeVisible();await expect(page.locator('dialog .inspiration-credit')).toContainText('Sumanbargavr');await page.keyboard.press('Escape');await expect(page.locator('dialog')).not.toBeVisible();await expect(preview).toBeFocused();await expect(page.locator('a[href*="/inspiration/"]')).toHaveCount(0);
+ await expect(page.getByRole('heading',{name:'Everyday 3D prints'})).toBeVisible();
+ await expect(page.getByRole('button',{name:/Tape dispenser repair cores/})).toBeVisible();
+ await expect(page.locator('.brochure-section-heading')).toContainText('not MEMO products or completed customer orders');const preview=page.locator('.brochure-image-button').first();await preview.focus();await expect(preview).toBeFocused();await page.keyboard.press('Enter');await expect(page.locator('dialog')).toBeVisible();await expect(page.locator('dialog [data-image-state=loaded]')).toBeVisible();await expect(page.locator('dialog .inspiration-credit')).toContainText('Sandstein');await page.keyboard.press('Escape');await expect(page.locator('dialog')).not.toBeVisible();await expect(preview).toBeFocused();await expect(page.locator('a[href*="/inspiration/"]')).toHaveCount(0);
+});
+
+test('button sounds play after activation and the mute preference survives reload',async({page,isMobile})=>{
+ await page.addInitScript(()=>{
+  const play=HTMLMediaElement.prototype.play;
+  HTMLMediaElement.prototype.play=function(){
+   if(this.src.endsWith('/sounds/button-click.wav')){
+    document.documentElement.dataset.soundStarts=String(Number(document.documentElement.dataset.soundStarts??0)+1);
+    this.addEventListener('ended',()=>{document.documentElement.dataset.soundFinished='true';},{once:true});
+   }
+   return play.call(this);
+  };
+ });
+ await page.goto('/gallery?lang=en');
+ const preview=page.getByRole('button',{name:/Modular drawer organizer/});
+ const toggle=page.getByRole('button',{name:'Button sounds'});
+ await expect(toggle).toHaveAttribute('aria-pressed','true');
+ await expect(page.locator('html')).not.toHaveAttribute('data-sound-starts',/./);
+ if(isMobile) await preview.tap();
+ else await preview.press('Enter');
+ await expect(page.locator('dialog')).toBeVisible();
+ await expect(page.locator('html')).toHaveAttribute('data-sound-starts','1');
+ await expect(page.locator('html')).toHaveAttribute('data-sound-finished','true');
+ await page.keyboard.press('Escape');
+ await toggle.click();
+ await expect(toggle).toHaveAttribute('aria-pressed','false');
+ await page.reload();
+ await expect(toggle).toHaveAttribute('aria-pressed','false');
+ await preview.click();
+ await expect(page.locator('dialog')).toBeVisible();
+ await expect(page.locator('html')).not.toHaveAttribute('data-sound-starts',/./);
 });
 test('dark is the customer default and all themes and languages fit desktop, tablet and mobile',async({page})=>{
  await page.emulateMedia({colorScheme:'light'});

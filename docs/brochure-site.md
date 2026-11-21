@@ -18,7 +18,9 @@ The homepage hero shows the figurine on the right at desktop widths and below th
 
 The two service cards use the existing server pricing-minimum endpoint: Basic 3D Printing from ฿100, Custom Design + Printing from ฿1,500. Copy explains that dimensions, quantity, material, print time and finishing affect the quotation; feasibility, final price, payment and delivery are confirmed before printing. No unreviewed per-gram rate, deposit percentage or delivery promise is invented.
 
-The gallery uses the six existing licensed reference photographs, with creator, original source, license links and modification notices beside each image. It clearly says they are examples, not MEMO products or completed orders. Selecting an image opens a keyboard-accessible local preview dialog; it does not create an order or require login. See [inspiration-gallery.md](inspiration-gallery.md) for the image-license evidence.
+The Everyday 3D prints gallery uses six licensed photographs of working objects for organization, repairs, electronics and accessories. Each card describes a use and links to the original photo, creator credit and license. The photos are references, not MEMO products or completed orders. Selecting a card opens a keyboard-accessible preview. The gallery media and credits are recorded in `packages/ui/src/everyday-prints.ts`. The [original inspiration catalog](inspiration-gallery.md) continues to support existing quotation references.
+
+Customer-site buttons play a short synthesized click on interaction. The **Button sounds** toggle in the footer mutes it and saves the preference in the browser.
 
 Customer-facing calls to action lead to the contact section, the Facebook business page or the supplied telephone number. Existing account/order/configurator URLs, admin operations, authorization, database records and pricing APIs are preserved for existing workflows; they are not advertised in the new public brochure navigation. No database migration or new environment variable is needed.
 
